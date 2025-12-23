@@ -27,3 +27,6 @@ dist-ssr
 .env
 .env.local
 .env.production
+
+# Private docs (do not commit sensitive business details)
+docs/PRIVATE.md

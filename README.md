@@ -2,60 +2,76 @@
 
 ## 📋 Sobre el Proyecto
 
-**SchoolSync** es una plataforma web diseñada para resolver un problema real de comunicación y organización en escuelas internacionales. Este proyecto nace de la necesidad real observada por mi persona en instituciones educativas donde la coordinación entre profesores y familias es compleja, especialmente cuando hay barreras lingüísticas, horarios diversos y múltiples canales de comunicación desorganizados.
+**SchoolSync** es una plataforma web moderna de gestión y coordinación diseñada para resolver problemas reales de comunicación en entornos educativos. El proyecto surge de la identificación de ineficiencias en la coordinación entre múltiples stakeholders en instituciones con necesidades organizativas complejas.
 
-### 🎯 Problema que Resuelve
+### 🎯 Visión del Proyecto
 
-En muchas escuelas internacionales actuales, la comunicación entre docentes y padres/madres está fragmentada:
-- **Información dispersa:** Tareas, exámenes y eventos se comunican por email, WhatsApp, agendas físicas o aplicaciones diversas
-- **Falta de centralización:** No existe un único punto de consulta para fechas importantes
-- **Pérdida de información:** Mensajes importantes se pierden entre conversaciones o no llegan a todos los padres
-- **Tiempo perdido:** Profesores dedican tiempo excesivo a enviar recordatorios individuales
-- **Barrera de acceso:** Familias con limitaciones tecnológicas o de idioma tienen dificultades para seguir la comunicación
+Este sistema está diseñado para abordar desafíos comunes en la gestión de información y coordinación entre diferentes roles de usuarios, proporcionando una solución centralizada y eficiente.
 
-### 💡 Solución Propuesta
+**Características principales:**
+- Sistema de gestión de información temporal con visualización intuitiva
+- Arquitectura multi-rol con permisos diferenciados
+- Interfaz responsive y accesible desde múltiples dispositivos
+- Organización eficiente de contenido por categorías
 
-SchoolSync centraliza toda la información académica relevante en una plataforma web accesible, moderna y fácil de usar:
+### 💡 Enfoque de Solución
 
-- **Calendario unificado:** Todas las tareas, exámenes, eventos y notas importantes en un solo lugar
-- **Roles diferenciados:** Profesores pueden crear y gestionar información; padres pueden visualizar y estar al día
-- **Acceso universal:** Plataforma web responsive accesible desde cualquier dispositivo con navegador
-- **Notificaciones claras:** Sistema organizado por tipos de eventos (tareas, exámenes, notas, eventos)
-- **Reducción de carga administrativa:** Automatización de comunicaciones rutinarias
-
-### 🏫 Impacto Esperado
-
-- **Para profesores:** Ahorro de tiempo en comunicaciones repetitivas, mejor organización del contenido educativo
-- **Para familias:** Visibilidad completa del calendario escolar, reducción de estrés por información perdida
-- **Para la institución:** Mejor imagen profesional, mayor satisfacción de familias, comunicación más eficiente
+- **Centralización de información:** Punto único de acceso a contenido relevante
+- **Gestión basada en roles:** Diferentes niveles de permisos y funcionalidades
+- **Experiencia de usuario optimizada:** Diseño moderno y flujo de trabajo intuitivo
+- **Escalabilidad:** Arquitectura preparada para crecimiento y nuevas funcionalidades
 
 ## 🚧 Estado Actual del Proyecto
 
-Este proyecto está en **desarrollo activo**. Actualmente cuenta con:
+> **⚠️ NOTA IMPORTANTE:** Este proyecto está en **desarrollo activo continuo**. Tanto el frontend como el backend están siendo mejorados constantemente. Nuevas características, mejoras de UX/UI y optimizaciones se implementan regularmente. El código y las funcionalidades evolucionan semana a semana.
 
-- ✅ **Frontend completo y funcional** desarrollado con React + Vite.
+Este proyecto está en **fase de desarrollo intensivo**. Actualmente cuenta con:
+
+- ✅ **Frontend funcional base** desarrollado con React + Vite
 - ✅ **Sistema de autenticación con roles** (profesor/padre)
 - ✅ **Calendario interactivo** con FullCalendar y permisos diferenciados
 - ✅ **Arquitectura preparada para backend** con servicios API estructurados
-- 🔄 **UI/UX Simple** Dado que el proyecto es relativamente nuevo, seguiré implementando mejoras de experiencia del usuario
-- 🔄 **Backend en desarrollo** - Estoy actualmente aprendiendo desarrollo backend (Node.js, Express, bases de datos) para implementar la capa de servidor y persistencia real
+- 🔄 **Frontend en mejora continua** - Implementando nuevas funcionalidades, mejoras de UX/UI, optimizaciones de rendimiento y refinamiento de componentes
+- 🔄 **Backend en desarrollo** - Aprendiendo y desarrollando simultáneamente Node.js, Express, autenticación JWT y gestión de bases de datos para la capa de servidor
 
-**Roadmap inmediato:**
-1. Implementación de backend con autenticación JWT
-2. Base de datos para persistencia de usuarios y eventos
-3. API REST para comunicación frontend-backend
-4. Sistema de notificaciones por email
-5. Panel de administración para gestión de usuarios
-6. Despliegue en producción para pruebas reales en escuela
+**Roadmap de Desarrollo:**
+
+### Fase 1 - Frontend (En Progreso)
+- Mejoras continuas de UI/UX y componentes
+- Optimización de rendimiento y accesibilidad
+- Implementación de tests
+- Refinamiento de arquitectura
+
+### Fase 2 - Backend (Próxima)
+1. Implementación de servidor y API REST
+2. Sistema de autenticación y autorización
+3. Capa de persistencia con base de datos
+4. Servicios de notificación
+5. Documentación de API
+
+### Fase 3 - Producción
+1. Integración completa frontend-backend
+2. Sistema de administración
+3. Testing exhaustivo
+4. Despliegue en producción
+5. Monitoreo y analytics
 
 ## 🚀 Características Implementadas
 
-- **Sistema de Login** con roles diferenciados (Profesor/Padre)
-- **Calendario Interactivo** usando FullCalendar con 4 tipos de eventos
-- **Dashboard personalizado** según rol de usuario
-- **Arquitectura escalable** con separación de componentes, servicios y contexto
-- **Responsive Design** optimizado para móviles, tablets y escritorio
-- **Preparación completa para backend** con cliente HTTP y estructura de servicios API
+### Funcionalidades Actuales
+- **Sistema de Autenticación** con control de acceso basado en roles
+- **Visualización de eventos temporales** con interfaz interactiva y categorización
+- **Dashboard adaptativo** personalizado según permisos de usuario
+- **Sistema CRUD** con permisos diferenciados por rol
+- **Gestión de datos** con persistencia temporal
+
+### Arquitectura Técnica
+- **Estructura modular** con separación clara de componentes, servicios, contexto y estilos
+- **Arquitectura escalable** preparada para crecimiento de funcionalidades
+- **Responsive Design** totalmente optimizado para móviles, tablets y escritorio
+- **Cliente HTTP preparado** con interceptores y manejo centralizado de errores
+- **Servicios API estructurados** listos para conectar con backend
+- **Sistema de enrutamiento** protegido con rutas privadas por rol
 
 ## 📦 Instalación
 
@@ -70,15 +86,15 @@ npm run dev
 npm run build
 ```
 
-## 🔑 Credenciales de Prueba (Demo)
+## 🔑 Acceso de Desarrollo
 
-### Profesor
-- **Email:** profesor@schoolsync.com
-- **Contraseña:** profesor123
+Durante el desarrollo no se comparten credenciales en el README público. Para probar la aplicación en entorno local, usa una de estas opciones:
 
-### Padre/Madre
-- **Email:** padre@schoolsync.com
-- **Contraseña:** padre123
+- Abre la página de login y utiliza los botones de demostración disponibles (Profesor / Padre) para precargar cuentas de ejemplo.
+- Crea tu propia cuenta de desarrollo desde la interfaz (registro local) o mediante herramientas de administración privadas.
+- Si necesitas acceso directo a las credenciales de demo o a detalles operativos, consulta el documento privado `/docs/PRIVATE.md` (resguardado para colaboradores) o contacta al autor.
+
+> Nota: las credenciales de ejemplo y detalles operativos se mantienen en documentación privada para proteger la idea. Solicita acceso si colaboras en el proyecto.
 
 ## 📁 Estructura del Proyecto
 
@@ -98,23 +114,41 @@ schoolSync/
 └── vite.config.js
 ```
 
-## 🔄 Integración con Backend (Futuro)
+## 🔄 Integración con Backend (En Preparación)
 
-El proyecto esta siendo preparado para conectar con un backend:
+El proyecto está completamente preparado para la integración con backend:
 
-1. **Configurar variables de entorno:** Copia `.env.example` a `.env` y configura la URL del backend
-2. **Servicios API:** Los archivos en `/src/services/` contienen comentarios indicando dónde implementar llamadas reales
-3. **Autenticación:** Reemplazar `authService.js` con llamadas HTTP reales y almacenar tokens JWT
-4. **Calendario:** Conectar eventos del calendario con endpoints de backend
+### Preparación Actual
+1. **Cliente HTTP centralizado** - `apiClient.js` con interceptores para tokens y manejo de errores
+2. **Servicios estructurados** - Todos los archivos en `/src/services/` tienen comentarios `// TODO: BACKEND` indicando puntos de integración
+3. **Variables de entorno** - Sistema `.env` configurado para URLs de API y configuración
+4. **Estructura de datos** - Modelos y tipos preparados para payloads del backend
 
-## 🛠️ Tecnologías
+### Pasos de Integración
+1. Configurar variables en `.env` (copia de `.env.example`)
+2. Implementar endpoints en backend que coincidan con la estructura preparada
+3. Reemplazar funciones dummy en `authService.js` con llamadas HTTP reales
+4. Conectar `calendarService.js` con endpoints de eventos
+5. Implementar almacenamiento y validación de tokens JWT
+6. Migrar datos de `localStorage` a base de datos
 
-- **Vite** - Build tool rápido
-- **React 18** - Framework UI
-- **React Router** - Navegación
-- **FullCalendar** - Calendario interactivo
-- **LocalStorage** - Persistencia temporal (reemplazar con API)
-Técnicas
+## 🛠️ Stack Tecnológico
+
+### Frontend Actual
+- **Vite** - Build tool moderno y rápido
+- **React 18** - Librería UI con hooks modernos
+- **React Router v6** - Sistema de navegación y rutas protegidas
+- **FullCalendar** - Librería profesional para gestión de calendarios
+- **Context API** - Gestión de estado global sin dependencias externas
+- **LocalStorage** - Persistencia temporal (transitorio hasta backend)
+
+### Backend Planificado
+- **Node.js + Express** - Servidor y API REST
+- **PostgreSQL** - Base de datos relacional
+- **JWT** - Autenticación y autorización
+- **Nodemailer** - Sistema de notificaciones por email
+
+## 📝 Notas
 
 ### Desarrollo Actual
 - **Persistencia temporal:** Los datos se guardan en `localStorage` del navegador (temporal hasta implementar backend)
@@ -137,18 +171,31 @@ Técnicas
 
 ## 🤝 Contribución y Contacto
 
-Este es un proyecto personal en desarrollo activo. Si estás interesado en colaborar, tienes sugerencias o quieres implementar algo similar en tu institución educativa, no dudes en contactar.
+Este es un proyecto personal en **desarrollo activo continuo**. Si estás interesado en colaborar, tienes sugerencias, feedback sobre UX/UI o quieres implementar algo similar en tu institución educativa, toda contribución es bienvenida.
 
-**Próximos pasos en el desarrollo:**
-- [ ] Implementar backend 
-- [ ] Configurar base de datos (PostgreSQL)
-- [ ] Sistema de autenticación con JWT
-- [ ] API REST completa
+### Áreas de Desarrollo Activo
+
+**Frontend:**
+- [ ] Componentes avanzados y features
+- [ ] Mejoras de accesibilidad y UX
+- [ ] Optimización y code splitting
 - [ ] Sistema de notificaciones
-- [ ] Tests automatizados
-- [ ] Despliegue en producción
-- [ ] Internacionalización (i18n)
-- [ ] Panel de administración avanzado
+- [ ] Tematización
+- [ ] Suite de tests completa
+
+**Backend:**
+- [ ] API REST y servicios
+- [ ] Capa de persistencia
+- [ ] Autenticación y autorización
+- [ ] Sistema de notificaciones
+- [ ] Gestión de recursos
+- [ ] Logging y monitoreo
+
+**DevOps:**
+- [ ] Pipeline CI/CD
+- [ ] Infraestructura cloud
+- [ ] Monitoreo de producción
+- [ ] Documentación técnica
 
 ## 📄 Licencia
 
