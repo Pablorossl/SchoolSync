@@ -81,11 +81,27 @@ export const register = async (userData) => {
  * })
  */
 export const verifyToken = async () => {
+  // Leer usuario guardado en localStorage
   const userStr = localStorage.getItem('schoolsync_user')
   if (!userStr) return null
-  
+
   try {
-    return JSON.parse(userStr)
+    const parsed = JSON.parse(userStr)
+
+    // Solo en desarrollo sincronizamos con DUMMY_USERS para que
+    // cambios en los datos demo (p.ej. nombre) se reflejen automáticamente.
+    // En producción no se intenta esta sincronización.
+    if (import.meta.env.DEV) {
+      const fresh = DUMMY_USERS.find(u => u.email === parsed.email)
+      if (fresh) {
+        const { password: _, ...userWithoutPassword } = fresh
+        // Actualizar localStorage para que la UI refleje los cambios
+        localStorage.setItem('schoolsync_user', JSON.stringify(userWithoutPassword))
+        return userWithoutPassword
+      }
+    }
+
+    return parsed
   } catch {
     return null
   }

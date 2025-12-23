@@ -1,4 +1,5 @@
 import { createContext, useState, useContext, useEffect } from 'react'
+import * as authService from '../services/authService'
 
 const AuthContext = createContext(null)
 
@@ -6,13 +7,23 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null)
   const [loading, setLoading] = useState(true)
 
-  // Verificar si hay usuario guardado en localStorage al cargar
+  // Inicializar el usuario: usamos authService.verifyToken() para
+  // sincronizar el usuario guardado en localStorage con los datos
+  // de desarrollo (DUMMY_USERS). Esto permite que, al cambiar los
+  // nombres en `authService`, la UI se actualice automáticamente.
   useEffect(() => {
-    const savedUser = localStorage.getItem('schoolsync_user')
-    if (savedUser) {
-      setUser(JSON.parse(savedUser))
+    const init = async () => {
+      try {
+        const verified = await authService.verifyToken()
+        if (verified) setUser(verified)
+      } catch (err) {
+        console.error('Error verificando usuario:', err)
+      } finally {
+        setLoading(false)
+      }
     }
-    setLoading(false)
+
+    init()
   }, [])
 
   const login = (userData) => {
