@@ -154,19 +154,93 @@ schoolSync/
 
 El proyecto está completamente preparado para la integración con backend:
 
+### 📋 Contrato API Completo
+
+El frontend tiene **documentación exhaustiva** del contrato API esperado:
+
+📄 **[Consulta docs/API_CONTRACT.md](docs/API_CONTRACT.md)** para ver:
+- Todos los endpoints necesarios (Auth, Messaging, Calendar)
+- Request/Response examples con tipos de datos
+- Códigos de error y manejo
+- Schema de base de datos sugerido
+- Stack tecnológico recomendado
+- Prioridad de implementación
+
 ### Preparación Actual
-1. **Cliente HTTP centralizado** - `apiClient.js` con interceptores para tokens y manejo de errores
-2. **Servicios estructurados** - Todos los archivos en `/src/services/` tienen comentarios `// TODO: BACKEND` indicando puntos de integración
-3. **Variables de entorno** - Sistema `.env` configurado para URLs de API y configuración
-4. **Estructura de datos** - Modelos y tipos preparados para payloads del backend
+1. **Cliente HTTP centralizado** - `apiClient.js` con interceptors para tokens y manejo de errores
+2. **Servicios estructurados** - Todos los archivos en `src/services/` tienen comentarios `TODO: BACKEND` indicando puntos de integración
+3. **Variables de entorno** - Configurar `.env` desde `.env.example`
+4. **Estructura de datos** - Modelos y tipos documentados en API_CONTRACT.md
+5. **Tests implementados** - 21 tests protegen servicios críticos
+
+### Para Backend Developers
+
+**Setup rápido:**
+
+```bash
+# 1. Clonar y configurar variables
+cp .env.example .env
+# Editar VITE_API_URL con tu backend URL
+
+# 2. Instalar y correr frontend
+npm install
+npm run dev
+
+# 3. Implementar endpoints según docs/API_CONTRACT.md
+# Empezar con: /auth/login, /auth/verify, /events (GET, POST)
+
+# 4. Testing
+npm test  # Ver tests de referencia para estructura de datos
+```
+
+**Integración incremental:**
+1. ✅ Auth endpoints (login, register, verify)
+2. ✅ Calendar CRUD (GET /events, POST /events, PUT /events/:id, DELETE /events/:id)
+3. ✅ Messaging básico (GET /conversations, POST /conversations, GET /messages)
+4. ⏳ Real-time con WebSockets (opcional)
+
+**Archivos clave para revisar:**
+- `docs/API_CONTRACT.md` - Especificación completa de API
+- `src/services/apiClient.js` - Cliente HTTP configurado
+- `src/services/authService.js` - Ejemplo de integración
+- `src/tests/*.test.js` - Tests de referencia para validar responses
+
+### 🎭 Modo Mock para Desarrollo Independiente
+
+Si necesitas desarrollar frontend sin esperar al backend, usa el **Mock Service Worker** incluido:
+
+```bash
+# 1. Habilitar modo mock en .env
+VITE_USE_MOCK_API=true
+
+# 2. Correr el proyecto
+npm run dev
+
+# 3. Desarrollar sin dependencias de backend
+# Todos los endpoints están mockeados con datos de prueba
+```
+
+**Usuarios de prueba mock:**
+- Profesor: `profesor@schoolsync.com` / `profesor123`
+- Padre: `padre@schoolsync.com` / `padre123`
+
+**Características del Mock:**
+- ✅ 20+ endpoints mockeados según API_CONTRACT.md
+- ✅ Persistencia en memoria durante la sesión
+- ✅ Latencia simulada (100-300ms)
+- ✅ Validación de tokens y permisos
+- ✅ Lógica de negocio (unread counters, last message, etc.)
+
+**Documentación completa:** [`docs/MSW_GUIDE.md`](docs/MSW_GUIDE.md)
 
 ### Pasos de Integración
 1. Configurar variables en `.env` (copia de `.env.example`)
-2. Implementar endpoints en backend que coincidan con la estructura preparada
+2. Implementar endpoints según `docs/API_CONTRACT.md`
 3. Reemplazar funciones dummy en `authService.js` con llamadas HTTP reales
 4. Conectar `calendarService.js` con endpoints de eventos
-5. Implementar almacenamiento y validación de tokens JWT
-6. Migrar datos de `localStorage` a base de datos
+5. Conectar `messagingService.js` con endpoints de mensajería
+6. Implementar almacenamiento y validación de tokens JWT
+7. Migrar datos de `localStorage` a base de datos
 
 ## 🛠️ Stack Tecnológico
 

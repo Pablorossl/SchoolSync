@@ -4,6 +4,14 @@ import App from './App.jsx'
 import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary.jsx'
 import './styles/index.css'
 
+// Habilitar Mock Service Worker en desarrollo si está configurado
+if (import.meta.env.MODE === 'development' && import.meta.env.VITE_USE_MOCK_API === 'true') {
+  const { worker } = await import('./mocks/browser.js')
+  await worker.start({
+    onUnhandledRequest: 'bypass', // No interferir con peticiones no mockeadas
+  })
+}
+
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <ErrorBoundary>

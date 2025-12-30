@@ -27,7 +27,13 @@
     "@vitejs/plugin-react": "^4.2.1",
     "@vitest/ui": "^4.0.16",
     "jsdom": "^27.4.0",
+    "msw": "^2.12.7",
     "vite": "^5.0.8",
     "vitest": "^4.0.16"
+  },
+  "msw": {
+    "workerDirectory": [
+      "public"
+    ]
   }
 }
