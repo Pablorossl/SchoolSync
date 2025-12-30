@@ -1,5 +1,4 @@
 import PropTypes from 'prop-types'
-import { SIZE } from '../../constants/ui'
 import './LoadingSpinner.css'
 
 /**
@@ -10,7 +9,7 @@ import './LoadingSpinner.css'
  * @param {boolean} fullScreen - Si se debe mostrar en pantalla completa
  */
 const LoadingSpinner = ({ 
-  size = SIZE.MEDIUM, 
+  size = 'medium', 
   message = '', 
   fullScreen = false 
 }) => {
@@ -38,7 +37,7 @@ const LoadingSpinner = ({
 }
 
 LoadingSpinner.propTypes = {
-  size: PropTypes.oneOf([SIZE.SMALL, SIZE.MEDIUM, SIZE.LARGE]),
+  size: PropTypes.oneOf(['small', 'medium', 'large']),
   message: PropTypes.string,
   fullScreen: PropTypes.bool,
 }

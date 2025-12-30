@@ -101,12 +101,4 @@ ConfirmDialog.propTypes = {
   type: PropTypes.oneOf(['danger', 'warning', 'info']),
 }
 
-ConfirmDialog.defaultProps = {
-  title: '¿Estás seguro?',
-  message: '¿Quieres continuar con esta acción?',
-  confirmText: 'Confirmar',
-  cancelText: 'Cancelar',
-  type: 'danger',
-}
-
 export default ConfirmDialog

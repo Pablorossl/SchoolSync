@@ -1,28 +1,12 @@
 import apiClient from './apiClient'
+import { STORAGE_KEYS } from '../constants/ui'
+import { MOCK_USERS, getUserById, MOCK_EVENT_TITLES } from '../constants/mockData'
 
 /**
  * NOTA: Este servicio utiliza localStorage para persistir mensajes en desarrollo.
  * Cuando el backend esté listo. Reemplazar estas funciones con llamadas
  * reales a la API usando apiClient.
  */
-
-// Claves de localStorage
-const STORAGE_KEYS = {
-  CONVERSATIONS: 'schoolsync_conversations',
-  MESSAGES: 'schoolsync_messages',
-}
-
-// Usuarios disponibles del sistema (sincronizado con authService)
-// NOTA: IDs normalizados a strings para evitar bugs de comparación
-const AVAILABLE_USERS = [
-  { id: '1', name: 'James Kennedy', role: 'teacher', email: 'profesor@schoolsync.com' },
-  { id: '2', name: 'Pablo Rosales', role: 'parent', email: 'padre@schoolsync.com' },
-  // Usuarios adicionales para seleccionar
-  { id: 'teacher_2', name: 'Prof. Ana Sánchez', role: 'teacher', subject: 'Lengua' },
-  { id: 'teacher_3', name: 'Prof. Luis Fernández', role: 'teacher', subject: 'Ciencias' },
-  { id: 'parent_3', name: 'Carmen Ruiz', role: 'parent', relation: 'Madre de Luis' },
-  { id: 'parent_4', name: 'María García', role: 'parent', relation: 'Madre de Juan' },
-]
 
 // Obtener usuario actual del localStorage
 const getCurrentUser = () => {
@@ -142,7 +126,7 @@ export const getConversations = async () => {
       const otherParticipantId = conv.participants.find(
         p => String(p) !== currentUserId
       )
-      const otherUser = AVAILABLE_USERS.find(u => u.id === String(otherParticipantId))
+      const otherUser = getUserById(otherParticipantId)
       
       return {
         ...conv,
@@ -266,23 +250,17 @@ export const createConversation = async ({ recipientId, subject, eventId }) => {
   const currentUserId = String(currentUser.id) // Normalizar a string
   const normalizedRecipientId = String(recipientId) // Normalizar a string
   
-  const recipient = AVAILABLE_USERS.find(u => u.id === normalizedRecipientId)
+  const recipient = getUserById(normalizedRecipientId)
   if (!recipient) throw new Error('Destinatario no encontrado')
   
   const allConversations = getStoredConversations()
-  
-  const eventTitles = {
-    event_1: '📝 Entrega trabajo matemáticas',
-    event_2: '📚 Examen de lengua',
-    event_3: '🎨 Excursión al museo',
-  }
   
   const newConversation = {
     id: `conv_${Date.now()}`,
     participants: [currentUserId, normalizedRecipientId],
     subject,
     eventId: eventId || null,
-    eventTitle: eventId ? eventTitles[eventId] : null,
+    eventTitle: eventId ? MOCK_EVENT_TITLES[eventId] : null,
     lastMessage: '',
     lastMessageDate: new Date().toISOString(),
     unreadBy: {},
@@ -360,7 +338,7 @@ export const getConversationsByEvent = async (eventId) => {
       const otherParticipantId = conv.participants.find(
         p => String(p) !== currentUserId
       )
-      const otherUser = AVAILABLE_USERS.find(u => u.id === String(otherParticipantId))
+      const otherUser = getUserById(otherParticipantId)
       
       return {
         ...conv,
@@ -430,7 +408,7 @@ export const searchMessages = async (query) => {
       const otherParticipantId = conv.participants.find(
         p => String(p) !== currentUserId
       )
-      const otherUser = AVAILABLE_USERS.find(u => u.id === String(otherParticipantId))
+      const otherUser = getUserById(otherParticipantId)
       
       return {
         ...conv,

@@ -1,27 +1,10 @@
 // Servicio de autenticación
 // TODO: BACKEND - Reemplazar con llamadas HTTP reales
 
-import { STORAGE_KEYS, USER_ROLES } from '../constants/ui'
+import { STORAGE_KEYS } from '../constants/ui'
+import { MOCK_USERS, getUserByEmail } from '../constants/mockData'
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api'
-
-// Usuarios dummy para desarrollo (remover cuando haya backend)
-const DUMMY_USERS = [
-  {
-    id: 1,
-    email: 'profesor@schoolsync.com',
-    password: 'profesor123',
-    role: USER_ROLES.TEACHER,
-    name: 'James Kennedy',
-  },
-  {
-    id: 2,
-    email: 'padre@schoolsync.com',
-    password: 'padre123',
-    role: USER_ROLES.PARENT,
-    name: 'Pablo Rosales',
-  },
-]
 
 /**
  * Login de usuario (actualmente dummy)
@@ -40,11 +23,9 @@ export const login = async (email, password) => {
   // Simular delay de red
   await new Promise(resolve => setTimeout(resolve, 500))
 
-  const user = DUMMY_USERS.find(
-    u => u.email === email && u.password === password
-  )
+  const user = getUserByEmail(email)
 
-  if (!user) {
+  if (!user || user.password !== password) {
     throw new Error('Credenciales inválidas')
   }
 
@@ -90,11 +71,11 @@ export const verifyToken = async () => {
   try {
     const parsed = JSON.parse(userStr)
 
-    // Solo en desarrollo sincronizamos con DUMMY_USERS para que
+    // Solo en desarrollo sincronizamos con MOCK_USERS para que
     // cambios en los datos demo (p.ej. nombre) se reflejen automáticamente.
     // En producción no se intenta esta sincronización.
     if (import.meta.env.DEV) {
-      const fresh = DUMMY_USERS.find(u => u.email === parsed.email)
+      const fresh = getUserByEmail(parsed.email)
       if (fresh) {
         const { password: _, ...userWithoutPassword } = fresh
         // Actualizar localStorage para que la UI refleje los cambios

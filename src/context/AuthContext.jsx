@@ -11,8 +11,8 @@ export const AuthProvider = ({ children }) => {
 
   // Inicializar el usuario: usamos authService.verifyToken() para
   // sincronizar el usuario guardado en localStorage con los datos
-  // de desarrollo (DUMMY_USERS). Esto permite que, al cambiar los
-  // nombres en `authService`, la UI se actualice automáticamente.
+  // de desarrollo (MOCK_USERS centralizados). Esto permite que, al cambiar los
+  // nombres en `mockData.js`, la UI se actualice automáticamente.
   useEffect(() => {
     const init = async () => {
       try {
