@@ -1,6 +1,8 @@
 import { useAuth } from '../../context/AuthContext'
 import Header from '../../components/Header/Header'
 import Calendar from '../../components/Calendar/Calendar'
+import Messaging from '../../components/Messaging/Messaging'
+import Onboarding from '../../components/Onboarding/Onboarding'
 import './Dashboard.css'
 
 const Dashboard = () => {
@@ -9,6 +11,7 @@ const Dashboard = () => {
   return (
     <div className="dashboard">
       <Header />
+      <Onboarding userRole={user?.role} />
       
       <div className="dashboard-content">
         <div className="welcome-section">
@@ -52,6 +55,10 @@ const Dashboard = () => {
 
         <div className="calendar-section">
           <Calendar userRole={user?.role} />
+        </div>
+
+        <div className="messaging-section">
+          <Messaging userRole={user?.role} userId={user?.id} />
         </div>
       </div>
     </div>

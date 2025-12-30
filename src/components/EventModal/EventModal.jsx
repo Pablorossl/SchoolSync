@@ -1,4 +1,7 @@
 import { useState, useEffect } from 'react'
+import PropTypes from 'prop-types'
+import ConfirmDialog from '../ConfirmDialog/ConfirmDialog'
+import { EVENT_TYPES } from '../../constants/ui'
 import './EventModal.css'
 
 const EventModal = ({ isOpen, onClose, onSave, onDelete, event, isTeacher }) => {
@@ -9,6 +12,7 @@ const EventModal = ({ isOpen, onClose, onSave, onDelete, event, isTeacher }) => 
     start: '',
     end: '',
   })
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
 
   useEffect(() => {
     if (event) {
@@ -171,8 +175,9 @@ const EventModal = ({ isOpen, onClose, onSave, onDelete, event, isTeacher }) => 
             {event && onDelete && (
               <button
                 type="button"
-                onClick={onDelete}
+                onClick={() => setShowDeleteConfirm(true)}
                 className="btn-danger"
+                aria-label="Eliminar evento"
               >
                 Eliminar
               </button>
@@ -187,9 +192,41 @@ const EventModal = ({ isOpen, onClose, onSave, onDelete, event, isTeacher }) => 
             </div>
           </div>
         </form>
+
+        <ConfirmDialog
+          isOpen={showDeleteConfirm}
+          onClose={() => setShowDeleteConfirm(false)}
+          onConfirm={onDelete}
+          title="¿Eliminar evento?"
+          message={`¿Estás seguro de que quieres eliminar "${formData.title}"? Esta acción no se puede deshacer.`}
+          confirmText="Sí, eliminar"
+          cancelText="Cancelar"
+          type="danger"
+        />
       </div>
     </div>
   )
+}
+
+EventModal.propTypes = {
+  isOpen: PropTypes.bool.isRequired,
+  onClose: PropTypes.func.isRequired,
+  onSave: PropTypes.func.isRequired,
+  onDelete: PropTypes.func,
+  event: PropTypes.shape({
+    id: PropTypes.string,
+    title: PropTypes.string,
+    description: PropTypes.string,
+    type: PropTypes.oneOf(Object.keys(EVENT_TYPES)),
+    start: PropTypes.string,
+    end: PropTypes.string,
+  }),
+  isTeacher: PropTypes.bool.isRequired,
+}
+
+EventModal.defaultProps = {
+  onDelete: null,
+  event: null,
 }
 
 export default EventModal

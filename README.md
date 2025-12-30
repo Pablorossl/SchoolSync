@@ -64,6 +64,42 @@ Este proyecto está en **fase de desarrollo intensivo**. Actualmente cuenta con:
 - **Dashboard adaptativo** personalizado según permisos de usuario
 - **Sistema CRUD** con permisos diferenciados por rol
 - **Gestión de datos** con persistencia temporal
+- **Sistema de mensajería interactivo** entre profesores y padres
+- **Tema claro/oscuro** con persistencia y detección automática
+- **Notificaciones toast** para feedback de acciones
+- **Tutorial de onboarding** personalizado por rol
+- **Diálogos de confirmación** para acciones críticas
+
+### 🎨 Mejoras de UX/UI Recientes
+
+#### Sistema de Temas
+- ✅ Modo claro y oscuro completamente funcional
+- ✅ Variables CSS para consistencia visual
+- ✅ Persistencia de preferencias en localStorage
+- ✅ Detección automática de tema del sistema
+- ✅ Transiciones suaves entre temas
+
+#### Notificaciones y Feedback
+- ✅ Sistema de toast notifications (success/error/warning/info)
+- ✅ Tooltips contextuales en elementos clave
+- ✅ Spinners de carga animados
+- ✅ Estados de loading en operaciones asíncronas
+- ✅ Confirmaciones modales para acciones destructivas
+
+#### Accesibilidad
+- ✅ ARIA labels comprehensivos
+- ✅ Navegación completa por teclado
+- ✅ Roles semánticos (dialog, listitem, status)
+- ✅ Screen reader friendly
+- ✅ Focus visible en elementos interactivos
+
+#### Animaciones
+- ✅ Entrada escalonada de elementos del dashboard
+- ✅ Transiciones suaves en cambios de estado
+- ✅ Hover effects mejorados
+- ✅ Animaciones de carga fluidas
+
+> 📄 Para más detalles técnicos, consulta `/docs/UX_UI_IMPROVEMENTS.md`
 
 ### Arquitectura Técnica
 - **Estructura modular** con separación clara de componentes, servicios, contexto y estilos

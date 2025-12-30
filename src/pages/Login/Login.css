@@ -1,20 +1,46 @@
 .login-container {
   min-height: 100vh;
+  min-height: 100dvh;
   display: flex;
   align-items: center;
   justify-content: center;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background-image: 
+    linear-gradient(135deg, rgba(102, 126, 234, 0.7) 0%, rgba(118, 75, 162, 0.7) 100%),
+    url('/school-background.svg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
   padding: 1rem;
+  position: relative;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.login-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+  pointer-events: none;
 }
 
 .login-card {
-  background: white;
+  background: var(--bg-primary);
   border-radius: 12px;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  box-shadow: var(--shadow);
   padding: 2.5rem;
   width: 100%;
   max-width: 420px;
   animation: slideUp 0.3s ease-out;
+  position: relative;
+  z-index: 1;
+  backdrop-filter: blur(10px);
+  margin: auto;
 }
 
 @keyframes slideUp {
@@ -41,7 +67,7 @@
 }
 
 .login-header p {
-  color: #6b7280;
+  color: var(--text-secondary);
   font-size: 0.95rem;
 }
 
@@ -58,16 +84,18 @@
 }
 
 .form-group label {
-  color: #374151;
+  color: var(--text-primary);
   font-weight: 500;
   font-size: 0.9rem;
 }
 
 .form-group input {
   padding: 0.75rem;
-  border: 2px solid #e5e7eb;
+  border: 2px solid var(--border-color);
   border-radius: 8px;
   font-size: 1rem;
+  background: var(--bg-primary);
+  color: var(--text-primary);
   transition: all 0.2s;
 }
 
@@ -115,11 +143,11 @@
 .demo-section {
   margin-top: 2rem;
   padding-top: 1.5rem;
-  border-top: 1px solid #e5e7eb;
+  border-top: 1px solid var(--border-color);
 }
 
 .demo-title {
-  color: #6b7280;
+  color: var(--text-secondary);
   font-size: 0.85rem;
   text-align: center;
   margin-bottom: 0.75rem;
@@ -133,17 +161,18 @@
 .btn-demo {
   flex: 1;
   padding: 0.625rem;
-  background: #f3f4f6;
-  border: 1px solid #d1d5db;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
   border-radius: 6px;
   font-size: 0.875rem;
+  color: var(--text-primary);
   cursor: pointer;
   transition: all 0.2s;
 }
 
 .btn-demo:hover {
-  background: #e5e7eb;
-  border-color: #9ca3af;
+  background: var(--border-color);
+  transform: translateY(-1px);
 }
 
 @media (max-width: 480px) {

@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
+import { useToast } from '../../context/ToastContext'
 import * as authService from '../../services/authService'
 import './Login.css'
 
@@ -11,6 +12,7 @@ const Login = () => {
   const [loading, setLoading] = useState(false)
   const navigate = useNavigate()
   const { login } = useAuth()
+  const toast = useToast()
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -20,9 +22,12 @@ const Login = () => {
     try {
       const userData = await authService.login(email, password)
       login(userData)
+      toast.success(`¡Bienvenido, ${userData.name}!`)
       navigate('/dashboard')
     } catch (err) {
-      setError(err.message || 'Error al iniciar sesión')
+      const errorMsg = err.message || 'Error al iniciar sesión'
+      setError(errorMsg)
+      toast.error(errorMsg)
     } finally {
       setLoading(false)
     }

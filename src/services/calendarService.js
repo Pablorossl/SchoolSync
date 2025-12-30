@@ -1,8 +1,9 @@
 // Servicio para manejar eventos del calendario
 // TODO: BACKEND - Reemplazar con llamadas HTTP reales
 
+import { STORAGE_KEYS } from '../constants/ui'
+
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api'
-const STORAGE_KEY = 'schoolsync_calendar_events'
 
 /**
  * Obtener todos los eventos del calendario
@@ -17,7 +18,7 @@ const STORAGE_KEY = 'schoolsync_calendar_events'
 export const getEvents = async () => {
   await new Promise(resolve => setTimeout(resolve, 300))
   
-  const eventsStr = localStorage.getItem(STORAGE_KEY)
+  const eventsStr = localStorage.getItem(STORAGE_KEYS.EVENTS)
   if (!eventsStr) return []
   
   try {
@@ -52,7 +53,7 @@ export const createEvent = async (eventData) => {
   }
   
   const updatedEvents = [...events, newEvent]
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedEvents))
+  localStorage.setItem(STORAGE_KEYS.EVENTS, JSON.stringify(updatedEvents))
   
   return newEvent
 }
@@ -79,7 +80,7 @@ export const updateEvent = async (eventId, eventData) => {
     event.id === eventId ? { ...event, ...eventData } : event
   )
   
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedEvents))
+  localStorage.setItem(STORAGE_KEYS.EVENTS, JSON.stringify(updatedEvents))
   
   return updatedEvents.find(e => e.id === eventId)
 }
@@ -100,7 +101,7 @@ export const deleteEvent = async (eventId) => {
   const events = await getEvents()
   const updatedEvents = events.filter(event => event.id !== eventId)
   
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedEvents))
+  localStorage.setItem(STORAGE_KEYS.EVENTS, JSON.stringify(updatedEvents))
   
   return true
 }

@@ -22,13 +22,13 @@
 }
 
 .modal-content {
-  background: white;
+  background: var(--bg-primary);
   border-radius: 12px;
   width: 90%;
   max-width: 550px;
   max-height: 90vh;
   overflow-y: auto;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  box-shadow: var(--shadow);
   animation: slideUp 0.3s ease-out;
 }
 
@@ -48,12 +48,12 @@
   justify-content: space-between;
   align-items: center;
   padding: 1.5rem;
-  border-bottom: 1px solid #e5e7eb;
+  border-bottom: 1px solid var(--border-color);
 }
 
 .modal-header h2 {
   margin: 0;
-  color: #111827;
+  color: var(--text-primary);
   font-size: 1.5rem;
 }
 
@@ -61,7 +61,7 @@
   background: none;
   border: none;
   font-size: 2rem;
-  color: #6b7280;
+  color: var(--text-secondary);
   cursor: pointer;
   line-height: 1;
   padding: 0;
@@ -75,7 +75,7 @@
 }
 
 .btn-close:hover {
-  background: #f3f4f6;
+  background: var(--bg-secondary);
 }
 
 .modal-content form {
@@ -88,7 +88,7 @@
 
 .form-group label {
   display: block;
-  color: #374151;
+  color: var(--text-primary);
   font-weight: 500;
   margin-bottom: 0.5rem;
   font-size: 0.9rem;
@@ -99,10 +99,12 @@
 .form-group textarea {
   width: 100%;
   padding: 0.75rem;
-  border: 2px solid #e5e7eb;
+  border: 2px solid var(--border-color);
   border-radius: 8px;
   font-size: 1rem;
   font-family: inherit;
+  background: var(--bg-primary);
+  color: var(--text-primary);
   transition: border-color 0.2s;
 }
 
@@ -130,7 +132,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 1.5rem;
-  border-top: 1px solid #e5e7eb;
+  border-top: 1px solid var(--border-color);
   gap: 1rem;
 }
 
@@ -141,16 +143,17 @@
 
 .btn-secondary {
   padding: 0.625rem 1.25rem;
-  background: #f3f4f6;
-  border: 1px solid #d1d5db;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
   border-radius: 6px;
   font-weight: 500;
+  color: var(--text-primary);
   cursor: pointer;
   transition: all 0.2s;
 }
 
 .btn-secondary:hover {
-  background: #e5e7eb;
+  background: var(--border-color);
 }
 
 .btn-danger {
@@ -179,7 +182,7 @@
 
 .detail-group label {
   display: block;
-  color: #6b7280;
+  color: var(--text-secondary);
   font-size: 0.85rem;
   font-weight: 600;
   text-transform: uppercase;
@@ -188,7 +191,7 @@
 }
 
 .detail-group p {
-  color: #111827;
+  color: var(--text-primary);
   font-size: 1rem;
   margin: 0;
   line-height: 1.6;

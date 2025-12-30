@@ -1,10 +1,16 @@
 import { useState, useEffect } from 'react'
+import PropTypes from 'prop-types'
 import FullCalendar from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import interactionPlugin from '@fullcalendar/interaction'
 import esLocale from '@fullcalendar/core/locales/es'
 import * as calendarService from '../../services/calendarService'
 import EventModal from '../EventModal/EventModal'
+import LoadingSpinner from '../LoadingSpinner/LoadingSpinner'
+import { useToast } from '../../context/ToastContext'
+import logger from '../../utils/logger'
+import { EVENT_COLORS, USER_ROLES } from '../../constants/ui'
+import { useAsyncOperation } from '../../utils/helpers'
 import './Calendar.css'
 
 const Calendar = ({ userRole }) => {
@@ -14,7 +20,9 @@ const Calendar = ({ userRole }) => {
   const [selectedEvent, setSelectedEvent] = useState(null)
   const [loading, setLoading] = useState(true)
 
-  const isTeacher = userRole === 'teacher'
+  const toast = useToast()
+  const isTeacher = userRole === USER_ROLES.TEACHER
+  const asyncOp = useAsyncOperation()
 
   // Cargar eventos al montar el componente
   useEffect(() => {
@@ -22,14 +30,14 @@ const Calendar = ({ userRole }) => {
   }, [])
 
   const loadEvents = async () => {
-    try {
-      const fetchedEvents = await calendarService.getEvents()
-      setEvents(fetchedEvents)
-    } catch (error) {
-      console.error('Error cargando eventos:', error)
-    } finally {
-      setLoading(false)
+    const result = await asyncOp(
+      () => calendarService.getEvents(),
+      'No se pudieron cargar los eventos'
+    )
+    if (result) {
+      setEvents(result)
     }
+    setLoading(false)
   }
 
   // Manejar clic en una fecha (solo profesores)
@@ -50,93 +58,84 @@ const Calendar = ({ userRole }) => {
 
   // Crear nuevo evento
   const handleCreateEvent = async (eventData) => {
-    try {
-      const newEvent = await calendarService.createEvent({
-        ...eventData,
-        start: selectedDate,
-      })
+    const newEvent = await asyncOp(
+      () => calendarService.createEvent({ ...eventData, start: selectedDate }),
+      'No se pudo crear el evento'
+    )
+    if (newEvent) {
       setEvents([...events, newEvent])
       setShowModal(false)
-    } catch (error) {
-      console.error('Error creando evento:', error)
-      alert('Error al crear el evento')
+      toast.success('Evento creado correctamente')
     }
   }
 
   // Actualizar evento
   const handleUpdateEvent = async (eventData) => {
-    try {
-      await calendarService.updateEvent(selectedEvent.id, eventData)
+    const success = await asyncOp(
+      () => calendarService.updateEvent(selectedEvent.id, eventData),
+      'No se pudo actualizar el evento'
+    )
+    if (success) {
       setEvents(events.map(e => 
         e.id === selectedEvent.id ? { ...e, ...eventData } : e
       ))
       setShowModal(false)
-    } catch (error) {
-      console.error('Error actualizando evento:', error)
-      alert('Error al actualizar el evento')
+      toast.success('Evento actualizado correctamente')
     }
   }
 
   // Eliminar evento
   const handleDeleteEvent = async () => {
-    if (!window.confirm('¿Estás seguro de eliminar este evento?')) return
-
-    try {
-      await calendarService.deleteEvent(selectedEvent.id)
+    const success = await asyncOp(
+      () => calendarService.deleteEvent(selectedEvent.id),
+      'No se pudo eliminar el evento'
+    )
+    if (success) {
       setEvents(events.filter(e => e.id !== selectedEvent.id))
       setShowModal(false)
-    } catch (error) {
-      console.error('Error eliminando evento:', error)
-      alert('Error al eliminar el evento')
+      toast.success('Evento eliminado correctamente')
     }
   }
 
   // Colores según tipo de evento
   const getEventColor = (eventType) => {
-    const colors = {
-      task: '#ef4444',      // Rojo para tareas
-      exam: '#f59e0b',      // Naranja para exámenes
-      note: '#3b82f6',      // Azul para notas
-      event: '#10b981',     // Verde para eventos
-    }
-    return colors[eventType] || '#6b7280'
+    return EVENT_COLORS[eventType] || EVENT_COLORS.default
   }
 
   if (loading) {
     return (
       <div className="calendar-loading">
-        <div className="spinner"></div>
-        <p>Cargando calendario...</p>
+        <LoadingSpinner size="medium" message="Cargando calendario..." />
       </div>
     )
   }
 
   return (
-    <div className="calendar-container">
+    <div className="calendar-container" role="region" aria-label="Calendario escolar">
       <div className="calendar-header">
         <h2>Calendario Escolar</h2>
         {!isTeacher && (
-          <p className="calendar-notice">
+          <p className="calendar-notice" role="status">
             👀 Vista de solo lectura - Solo los profesores pueden editar
           </p>
         )}
       </div>
 
-      <div className="calendar-legend">
-        <span className="legend-item">
-          <span className="legend-dot" style={{ background: '#ef4444' }}></span>
+      <div className="calendar-legend" role="list" aria-label="Leyenda de tipos de eventos">
+        <span className="legend-item" role="listitem">
+          <span className="legend-dot" style={{ background: EVENT_COLORS.task }} aria-hidden="true"></span>
           Tareas
         </span>
-        <span className="legend-item">
-          <span className="legend-dot" style={{ background: '#f59e0b' }}></span>
+        <span className="legend-item" role="listitem">
+          <span className="legend-dot" style={{ background: EVENT_COLORS.exam }} aria-hidden="true"></span>
           Exámenes
         </span>
-        <span className="legend-item">
-          <span className="legend-dot" style={{ background: '#3b82f6' }}></span>
+        <span className="legend-item" role="listitem">
+          <span className="legend-dot" style={{ background: EVENT_COLORS.note }} aria-hidden="true"></span>
           Notas
         </span>
-        <span className="legend-item">
-          <span className="legend-dot" style={{ background: '#10b981' }}></span>
+        <span className="legend-item" role="listitem">
+          <span className="legend-dot" style={{ background: EVENT_COLORS.event }} aria-hidden="true"></span>
           Eventos
         </span>
       </div>
@@ -177,6 +176,10 @@ const Calendar = ({ userRole }) => {
       )}
     </div>
   )
+}
+
+Calendar.propTypes = {
+  userRole: PropTypes.oneOf([USER_ROLES.TEACHER, USER_ROLES.PARENT]).isRequired,
 }
 
 export default Calendar

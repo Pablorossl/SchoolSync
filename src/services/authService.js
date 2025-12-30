@@ -1,6 +1,8 @@
 // Servicio de autenticación
 // TODO: BACKEND - Reemplazar con llamadas HTTP reales
 
+import { STORAGE_KEYS, USER_ROLES } from '../constants/ui'
+
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api'
 
 // Usuarios dummy para desarrollo (remover cuando haya backend)
@@ -9,14 +11,14 @@ const DUMMY_USERS = [
     id: 1,
     email: 'profesor@schoolsync.com',
     password: 'profesor123',
-    role: 'teacher',
+    role: USER_ROLES.TEACHER,
     name: 'James Kennedy',
   },
   {
     id: 2,
     email: 'padre@schoolsync.com',
     password: 'padre123',
-    role: 'parent',
+    role: USER_ROLES.PARENT,
     name: 'Pablo Rosales',
   },
 ]
@@ -82,7 +84,7 @@ export const register = async (userData) => {
  */
 export const verifyToken = async () => {
   // Leer usuario guardado en localStorage
-  const userStr = localStorage.getItem('schoolsync_user')
+  const userStr = localStorage.getItem(STORAGE_KEYS.USER)
   if (!userStr) return null
 
   try {
@@ -96,7 +98,7 @@ export const verifyToken = async () => {
       if (fresh) {
         const { password: _, ...userWithoutPassword } = fresh
         // Actualizar localStorage para que la UI refleje los cambios
-        localStorage.setItem('schoolsync_user', JSON.stringify(userWithoutPassword))
+        localStorage.setItem(STORAGE_KEYS.USER, JSON.stringify(userWithoutPassword))
         return userWithoutPassword
       }
     }

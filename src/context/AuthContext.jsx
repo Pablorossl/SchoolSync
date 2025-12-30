@@ -1,5 +1,7 @@
 import { createContext, useState, useContext, useEffect } from 'react'
 import * as authService from '../services/authService'
+import logger from '../utils/logger'
+import { STORAGE_KEYS } from '../constants/ui'
 
 const AuthContext = createContext(null)
 
@@ -17,7 +19,7 @@ export const AuthProvider = ({ children }) => {
         const verified = await authService.verifyToken()
         if (verified) setUser(verified)
       } catch (err) {
-        console.error('Error verificando usuario:', err)
+        logger.error('Error verificando usuario:', err)
       } finally {
         setLoading(false)
       }
@@ -28,12 +30,12 @@ export const AuthProvider = ({ children }) => {
 
   const login = (userData) => {
     setUser(userData)
-    localStorage.setItem('schoolsync_user', JSON.stringify(userData))
+    localStorage.setItem(STORAGE_KEYS.USER, JSON.stringify(userData))
   }
 
   const logout = () => {
     setUser(null)
-    localStorage.removeItem('schoolsync_user')
+    localStorage.removeItem(STORAGE_KEYS.USER)
     // TODO: BACKEND - Llamar al endpoint de logout para invalidar token
     // await apiClient.post('/auth/logout')
   }
