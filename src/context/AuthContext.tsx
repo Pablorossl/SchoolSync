@@ -1,12 +1,31 @@
-import { createContext, useState, useContext, useEffect } from 'react'
-import * as authService from '../services/authService'
-import logger from '../utils/logger'
-import { STORAGE_KEYS } from '../constants/ui'
+import { createContext, useState, useContext, useEffect, type ReactNode } from 'react'
+import * as authService from '@services/authService'
+import type { UserWithoutPassword } from '@services/authService'
+import logger from '@utils/logger'
+import { STORAGE_KEYS } from '@constants/ui'
 
-const AuthContext = createContext(null)
+/**
+ * Tipo del contexto de autenticación
+ */
+interface AuthContextType {
+  user: UserWithoutPassword | null
+  login: (userData: UserWithoutPassword) => void
+  logout: () => void
+  loading: boolean
+  isAuthenticated: boolean
+}
 
-export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null)
+/**
+ * Props del AuthProvider
+ */
+interface AuthProviderProps {
+  children: ReactNode
+}
+
+const AuthContext = createContext<AuthContextType | null>(null)
+
+export const AuthProvider = ({ children }: AuthProviderProps) => {
+  const [user, setUser] = useState<UserWithoutPassword | null>(null)
   const [loading, setLoading] = useState(true)
 
   // Inicializar el usuario: usamos authService.verifyToken() para
@@ -28,7 +47,7 @@ export const AuthProvider = ({ children }) => {
     init()
   }, [])
 
-  const login = (userData) => {
+  const login = (userData: UserWithoutPassword) => {
     setUser(userData)
     localStorage.setItem(STORAGE_KEYS.USER, JSON.stringify(userData))
   }
@@ -40,7 +59,7 @@ export const AuthProvider = ({ children }) => {
     // await apiClient.post('/auth/logout')
   }
 
-  const value = {
+  const value: AuthContextType = {
     user,
     login,
     logout,
@@ -51,7 +70,7 @@ export const AuthProvider = ({ children }) => {
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
 }
 
-export const useAuth = () => {
+export const useAuth = (): AuthContextType => {
   const context = useContext(AuthContext)
   if (!context) {
     throw new Error('useAuth debe ser usado dentro de AuthProvider')

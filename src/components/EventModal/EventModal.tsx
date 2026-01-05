@@ -1,18 +1,49 @@
-import { useState, useEffect } from 'react'
-import PropTypes from 'prop-types'
+import { useState, useEffect, type FormEvent, type ChangeEvent, type MouseEvent } from 'react'
 import ConfirmDialog from '../ConfirmDialog/ConfirmDialog'
 import { EVENT_TYPES } from '../../constants/ui'
 import './EventModal.css'
 
-const EventModal = ({ isOpen, onClose, onSave, onDelete, event, isTeacher }) => {
-  const [formData, setFormData] = useState({
+/**
+ * Tipo de evento del calendario
+ */
+export type EventType = typeof EVENT_TYPES[keyof typeof EVENT_TYPES]
+
+/**
+ * Estructura de datos de un evento
+ */
+export interface EventData {
+  id?: string
+  title: string
+  description?: string
+  type: EventType
+  start: string
+  end: string
+}
+
+/**
+ * Props del componente EventModal
+ */
+interface EventModalProps {
+  isOpen: boolean
+  onClose: () => void
+  onSave: (data: EventData) => void
+  onDelete?: (() => void) | null
+  event?: EventData | null
+  isTeacher: boolean
+}
+
+/**
+ * Componente modal para crear/editar/ver eventos del calendario
+ */
+const EventModal = ({ isOpen, onClose, onSave, onDelete, event, isTeacher }: EventModalProps) => {
+  const [formData, setFormData] = useState<EventData>({
     title: '',
     description: '',
-    type: 'task',
+    type: EVENT_TYPES.TASK,
     start: '',
     end: '',
   })
-  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState<boolean>(false)
 
   useEffect(() => {
     if (event) {
@@ -26,12 +57,12 @@ const EventModal = ({ isOpen, onClose, onSave, onDelete, event, isTeacher }) => 
     }
   }, [event])
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     onSave(formData)
   }
 
-  const handleChange = (e) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target
     setFormData(prev => ({
       ...prev,
@@ -45,7 +76,7 @@ const EventModal = ({ isOpen, onClose, onSave, onDelete, event, isTeacher }) => 
   if (!isTeacher && event) {
     return (
       <div className="modal-overlay" onClick={onClose}>
-        <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+        <div className="modal-content" onClick={(e: MouseEvent) => e.stopPropagation()}>
           <div className="modal-header">
             <h2>Detalles del Evento</h2>
             <button onClick={onClose} className="btn-close">&times;</button>
@@ -60,10 +91,10 @@ const EventModal = ({ isOpen, onClose, onSave, onDelete, event, isTeacher }) => 
             <div className="detail-group">
               <label>Tipo:</label>
               <p className={`type-badge type-${event.type}`}>
-                {event.type === 'task' && '📝 Tarea'}
-                {event.type === 'exam' && '📚 Examen'}
-                {event.type === 'note' && '📌 Nota'}
-                {event.type === 'event' && '🎉 Evento'}
+                {event.type === EVENT_TYPES.TASK && '📝 Tarea'}
+                {event.type === EVENT_TYPES.EXAM && '📚 Examen'}
+                {event.type === EVENT_TYPES.NOTE && '📌 Nota'}
+                {event.type === EVENT_TYPES.EVENT && '🎉 Evento'}
               </p>
             </div>
 
@@ -127,10 +158,10 @@ const EventModal = ({ isOpen, onClose, onSave, onDelete, event, isTeacher }) => 
               onChange={handleChange}
               required
             >
-              <option value="task">📝 Tarea</option>
-              <option value="exam">📚 Examen</option>
-              <option value="note">📌 Nota Importante</option>
-              <option value="event">🎉 Evento</option>
+              <option value={EVENT_TYPES.TASK}>📝 Tarea</option>
+              <option value={EVENT_TYPES.EXAM}>📚 Examen</option>
+              <option value={EVENT_TYPES.NOTE}>📌 Nota Importante</option>
+              <option value={EVENT_TYPES.EVENT}>🎉 Evento</option>
             </select>
           </div>
 
@@ -142,7 +173,7 @@ const EventModal = ({ isOpen, onClose, onSave, onDelete, event, isTeacher }) => 
               value={formData.description}
               onChange={handleChange}
               placeholder="Detalles adicionales..."
-              rows="3"
+              rows={3}
             />
           </div>
 
@@ -196,7 +227,7 @@ const EventModal = ({ isOpen, onClose, onSave, onDelete, event, isTeacher }) => 
         <ConfirmDialog
           isOpen={showDeleteConfirm}
           onClose={() => setShowDeleteConfirm(false)}
-          onConfirm={onDelete}
+          onConfirm={onDelete || (() => {})}
           title="¿Eliminar evento?"
           message={`¿Estás seguro de que quieres eliminar "${formData.title}"? Esta acción no se puede deshacer.`}
           confirmText="Sí, eliminar"
@@ -206,27 +237,6 @@ const EventModal = ({ isOpen, onClose, onSave, onDelete, event, isTeacher }) => 
       </div>
     </div>
   )
-}
-
-EventModal.propTypes = {
-  isOpen: PropTypes.bool.isRequired,
-  onClose: PropTypes.func.isRequired,
-  onSave: PropTypes.func.isRequired,
-  onDelete: PropTypes.func,
-  event: PropTypes.shape({
-    id: PropTypes.string,
-    title: PropTypes.string,
-    description: PropTypes.string,
-    type: PropTypes.oneOf(Object.keys(EVENT_TYPES)),
-    start: PropTypes.string,
-    end: PropTypes.string,
-  }),
-  isTeacher: PropTypes.bool.isRequired,
-}
-
-EventModal.defaultProps = {
-  onDelete: null,
-  event: null,
 }
 
 export default EventModal

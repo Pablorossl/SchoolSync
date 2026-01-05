@@ -1,37 +1,72 @@
-import { useToast } from '../context/ToastContext'
+import { useToast } from '@context/ToastContext'
 import { logger } from './logger'
+
+/**
+ * Tipo para el resultado de operaciones con manejo de errores
+ */
+export interface AsyncOperationResult<T = any> {
+  success: boolean
+  data?: T
+  error?: Error
+  message?: string
+}
+
+/**
+ * Mensajes para operaciones asíncronas
+ */
+export interface AsyncMessages {
+  success?: string | null
+  error?: string
+  loading?: string | null
+}
+
+/**
+ * Regla de validación para formularios
+ */
+export interface ValidationRule {
+  required?: boolean
+  minLength?: number
+  maxLength?: number
+  pattern?: RegExp
+  message?: string
+}
+
+/**
+ * Resultado de validación de formulario
+ */
+export interface ValidationResult {
+  isValid: boolean
+  errors: Record<string, string>
+}
 
 /**
  * Helper para manejar operaciones asíncronas con toast y logging
  * Reduce duplicación de try/catch/toast en toda la aplicación
- * 
- * @param {Function} operation - Función asíncrona a ejecutar
- * @param {Object} messages - Mensajes de éxito y error
- * @param {string} messages.success - Mensaje de éxito
- * @param {string} messages.error - Mensaje de error
- * @param {string} messages.loading - Mensaje mientras carga (opcional)
- * @returns {Promise} - Resultado de la operación
  */
-export const withErrorHandling = async (operation, messages = {}) => {
+export const withErrorHandling = async <T = any>(
+  operation: () => Promise<T>,
+  messages: AsyncMessages = {}
+): Promise<AsyncOperationResult<T>> => {
   const {
     success = null,
     error = 'Ha ocurrido un error',
-    loading = null
   } = messages
 
   try {
     const result = await operation()
     
     if (success) {
-      // El toast debe ser llamado desde el componente que usa useToast
-      // Esta función solo retorna el resultado y el estado
       return { success: true, data: result, message: success }
     }
     
     return { success: true, data: result }
   } catch (err) {
     logger.error(error, err)
-    return { success: false, error: err, message: error }
+    return { 
+      success: false, 
+      error: err instanceof Error ? err : new Error(String(err)), 
+      message: error 
+    }
   }
 }
 
@@ -40,15 +75,18 @@ export const withErrorHandling = async (operation, messages = {}) => {
  * Combina withErrorHandling con useToast
  */
 export const useAsyncOperation = () => {
-  const toast = useToast()
+  const toast: any = useToast() // TODO: Fix cuando ToastContext esté en TS
 
-  return async (operation, errorMessage) => {
+  return async <T = any>(
+    operation: () => Promise<T>,
+    errorMessage?: string
+  ): Promise<T | null> => {
     try {
       const result = await operation()
       return result
     } catch (err) {
       logger.error(errorMessage || 'Error en operación', err)
-      if (errorMessage) {
+      if (errorMessage && toast) {
         toast.error(errorMessage)
       }
       return null
@@ -59,8 +97,11 @@ export const useAsyncOperation = () => {
 /**
  * Validador genérico de campos de formulario
  */
-export const validateForm = (data, rules) => {
-  const errors = {}
+export const validateForm = (
+  data: Record<string, any>,
+  rules: Record<string, ValidationRule>
+): ValidationResult => {
+  const errors: Record<string, string> = {}
   
   Object.keys(rules).forEach(field => {
     const rule = rules[field]
@@ -92,10 +133,13 @@ export const validateForm = (data, rules) => {
 /**
  * Debounce function para optimizar búsquedas y eventos
  */
-export const debounce = (func, delay = 300) => {
-  let timeoutId
+export const debounce = <T extends (...args: any[]) => any>(
+  func: T,
+  delay: number = 300
+): ((...args: Parameters<T>) => void) => {
+  let timeoutId: ReturnType<typeof setTimeout>
   
-  return (...args) => {
+  return (...args: Parameters<T>) => {
     clearTimeout(timeoutId)
     timeoutId = setTimeout(() => func(...args), delay)
   }
@@ -104,10 +148,13 @@ export const debounce = (func, delay = 300) => {
 /**
  * Throttle function para limitar ejecuciones frecuentes
  */
-export const throttle = (func, limit = 300) => {
-  let inThrottle
+export const throttle = <T extends (...args: any[]) => any>(
+  func: T,
+  limit: number = 300
+): ((...args: Parameters<T>) => void) => {
+  let inThrottle: boolean
   
-  return (...args) => {
+  return (...args: Parameters<T>) => {
     if (!inThrottle) {
       func(...args)
       inThrottle = true
@@ -119,8 +166,11 @@ export const throttle = (func, limit = 300) => {
 /**
  * Formatear fecha de manera consistente
  */
-export const formatDate = (date, options = {}) => {
-  const defaultOptions = {
+export const formatDate = (
+  date: Date | string | number,
+  options: Intl.DateTimeFormatOptions = {}
+): string => {
+  const defaultOptions: Intl.DateTimeFormatOptions = {
     year: 'numeric',
     month: 'long',
     day: 'numeric',
@@ -133,10 +183,10 @@ export const formatDate = (date, options = {}) => {
 /**
  * Formatear tiempo relativo (hace X minutos)
  */
-export const formatTimeAgo = (date) => {
+export const formatTimeAgo = (date: Date | string | number): string => {
   const now = new Date()
   const past = new Date(date)
-  const diffMs = now - past
+  const diffMs = now.getTime() - past.getTime()
   const diffMins = Math.floor(diffMs / 60000)
   const diffHours = Math.floor(diffMs / 3600000)
   const diffDays = Math.floor(diffMs / 86400000)
@@ -152,14 +202,14 @@ export const formatTimeAgo = (date) => {
 /**
  * Generar ID único simple
  */
-export const generateId = () => {
+export const generateId = (): string => {
   return `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`
 }
 
 /**
  * Truncar texto con ellipsis
  */
-export const truncateText = (text, maxLength = 50) => {
+export const truncateText = (text: string, maxLength: number = 50): string => {
   if (!text || text.length <= maxLength) return text
   return text.substring(0, maxLength) + '...'
 }
@@ -167,15 +217,15 @@ export const truncateText = (text, maxLength = 50) => {
 /**
  * Capitalizar primera letra
  */
-export const capitalize = (text) => {
+export const capitalize = (text: string): string => {
   if (!text) return ''
   return text.charAt(0).toUpperCase() + text.slice(1)
 }
 
 /**
- * Clasificar por campo
+ * Combinar clases CSS de manera segura
  */
-export const classNames = (...classes) => {
+export const classNames = (...classes: (string | boolean | undefined | null)[]): string => {
   return classes.filter(Boolean).join(' ')
 }
 

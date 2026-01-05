@@ -1,10 +1,23 @@
 // Servicio de autenticación
 // TODO: BACKEND - Reemplazar con llamadas HTTP reales
 
-import { STORAGE_KEYS } from '../constants/ui'
-import { MOCK_USERS, getUserByEmail } from '../constants/mockData'
+import { STORAGE_KEYS } from '@constants/ui'
+import { type MockUser, getUserByEmail } from '@constants/mockData'
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api'
+/**
+ * Tipo de usuario sin password (para retornar)
+ */
+export type UserWithoutPassword = Omit<MockUser, 'password'>
+
+/**
+ * Datos para registro de usuario
+ */
+export interface RegisterData {
+  email: string
+  password: string
+  name: string
+  role: string
+}
 
 /**
  * Login de usuario (actualmente dummy)
@@ -19,7 +32,7 @@ const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api'
  * localStorage.setItem('token', data.token)
  * return data.user
  */
-export const login = async (email, password) => {
+export const login = async (email: string, password: string): Promise<UserWithoutPassword> => {
   // Simular delay de red
   await new Promise(resolve => setTimeout(resolve, 500))
 
@@ -44,13 +57,15 @@ export const login = async (email, password) => {
  *   body: JSON.stringify({ email, password, name, role })
  * })
  */
-export const register = async (userData) => {
+export const register = async (userData: RegisterData): Promise<UserWithoutPassword> => {
   await new Promise(resolve => setTimeout(resolve, 500))
   
   // Por ahora solo retornamos los datos
   return {
-    id: Date.now(),
-    ...userData,
+    id: String(Date.now()),
+    email: userData.email,
+    name: userData.name,
+    role: userData.role as any,
   }
 }
 
@@ -63,13 +78,13 @@ export const register = async (userData) => {
  *   headers: { 'Authorization': `Bearer ${token}` }
  * })
  */
-export const verifyToken = async () => {
+export const verifyToken = async (): Promise<UserWithoutPassword | null> => {
   // Leer usuario guardado en localStorage
   const userStr = localStorage.getItem(STORAGE_KEYS.USER)
   if (!userStr) return null
 
   try {
-    const parsed = JSON.parse(userStr)
+    const parsed = JSON.parse(userStr) as UserWithoutPassword
 
     // Solo en desarrollo sincronizamos con MOCK_USERS para que
     // cambios en los datos demo (p.ej. nombre) se reflejen automáticamente.

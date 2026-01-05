@@ -1,19 +1,19 @@
-import { useState } from 'react'
+import { useState, type FormEvent, type ChangeEvent } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
 import { useToast } from '../../context/ToastContext'
 import * as authService from '../../services/authService'
 
 const Login = () => {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [error, setError] = useState('')
-  const [loading, setLoading] = useState(false)
+  const [email, setEmail] = useState<string>('')
+  const [password, setPassword] = useState<string>('')
+  const [error, setError] = useState<string>('')
+  const [loading, setLoading] = useState<boolean>(false)
   const navigate = useNavigate()
   const { login } = useAuth()
   const toast = useToast()
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     setError('')
     setLoading(true)
@@ -43,18 +43,22 @@ const Login = () => {
   }
 
   return (
-    <div className="min-h-screen relative bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 flex items-center justify-center p-4 overflow-hidden">
+    <div className="w-full min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 p-4 py-12 relative overflow-hidden">
       {/* Background Image */}
-      <div className="absolute inset-0 opacity-30 dark:opacity-20">
+      <div className="absolute inset-0 opacity-40 dark:opacity-15 pointer-events-none" aria-hidden="true">
         <img 
           src="/school-background.svg" 
           alt="" 
-          className="w-full h-full object-cover"
-          aria-hidden="true"
+          className="w-full h-full object-cover object-center sm:object-contain md:object-cover scale-105 sm:scale-100"
+          style={{ 
+            filter: 'blur(0.5px)',
+            transform: 'translateZ(0)',
+            willChange: 'transform'
+          }}
         />
       </div>
-      
-      <div className="w-full max-w-md relative z-10">
+
+      <div className="w-full max-w-md mx-auto relative z-10">
         {/* Logo y Header */}
         <div className="text-center mb-8 animate-fade-in">
           <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl mb-4 shadow-lg hover:scale-110 transition-transform duration-300">

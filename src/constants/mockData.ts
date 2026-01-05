@@ -9,7 +9,20 @@
  * de verdad para datos de desarrollo.
  */
 
-import { USER_ROLES } from './ui'
+import { USER_ROLES, type UserRole } from './ui'
+
+/**
+ * Tipo de usuario mock
+ */
+export interface MockUser {
+  id: string
+  email: string
+  password?: string  // Solo para usuarios con login
+  role: UserRole
+  name: string
+  subject?: string   // Para profesores
+  relation?: string  // Para padres
+}
 
 /**
  * Usuarios de prueba para autenticación y mensajería
@@ -17,7 +30,7 @@ import { USER_ROLES } from './ui'
  * NOTA: IDs son strings para consistencia con la API real.
  * Todos los servicios deben usar estos usuarios.
  */
-export const MOCK_USERS = [
+export const MOCK_USERS: MockUser[] = [
   // Usuarios principales con credenciales de login
   {
     id: '1',
@@ -68,28 +81,28 @@ export const MOCK_USERS = [
 /**
  * Obtener usuarios que pueden hacer login
  */
-export const getLoginUsers = () => {
+export const getLoginUsers = (): MockUser[] => {
   return MOCK_USERS.filter(user => user.password)
 }
 
 /**
  * Obtener todos los usuarios disponibles (para selección en mensajería)
  */
-export const getAllUsers = () => {
+export const getAllUsers = (): MockUser[] => {
   return MOCK_USERS
 }
 
 /**
  * Buscar usuario por ID
  */
-export const getUserById = (id) => {
+export const getUserById = (id: string | number): MockUser | undefined => {
   return MOCK_USERS.find(user => user.id === String(id))
 }
 
 /**
  * Buscar usuario por email
  */
-export const getUserByEmail = (email) => {
+export const getUserByEmail = (email: string): MockUser | undefined => {
   return MOCK_USERS.find(user => user.email === email)
 }
 
@@ -97,7 +110,7 @@ export const getUserByEmail = (email) => {
  * Títulos de eventos de ejemplo (para desarrollo)
  * TODO: BACKEND - Esto vendrá del endpoint /events
  */
-export const MOCK_EVENT_TITLES = {
+export const MOCK_EVENT_TITLES: Record<string, string> = {
   event_1: '📝 Entrega trabajo matemáticas',
   event_2: '📚 Examen de lengua',
   event_3: '🎨 Excursión al museo',

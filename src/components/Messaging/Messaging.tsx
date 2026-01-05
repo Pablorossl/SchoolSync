@@ -1,5 +1,4 @@
-import { useState, useEffect } from 'react'
-import PropTypes from 'prop-types'
+import { useState, useEffect, type FormEvent } from 'react'
 import * as messagingService from '../../services/messagingService'
 import { useToast } from '../../context/ToastContext'
 import { useAsyncOperation, formatTimeAgo } from '../../utils/helpers'
@@ -7,6 +6,55 @@ import { USER_ROLES } from '../../constants/ui'
 import logger from '../../utils/logger'
 import Tooltip from '../Tooltip/Tooltip'
 import './Messaging.css'
+
+/**
+ * Estructura de una conversación
+ */
+interface Conversation {
+  id: string
+  participants: string[]
+  participantName?: string
+  participantRole?: string
+  subject: string
+  eventId: string | null
+  eventTitle: string | null
+  lastMessage: string
+  lastMessageDate: string
+  unreadBy: Record<string, number>
+  unreadCount?: number
+  createdAt: string
+}
+
+/**
+ * Estructura de un mensaje
+ */
+interface Message {
+  id: string
+  conversationId: string
+  senderId: string
+  senderName: string
+  senderRole: string
+  content: string
+  timestamp: string
+}
+
+/**
+ * Props del componente Messaging
+ */
+interface MessagingProps {
+  userRole: string
+  userId: string
+  selectedEventId?: string | null
+}
+
+/**
+ * Datos para crear nueva conversación
+ */
+interface NewConversationData {
+  recipientId: string
+  subject: string
+  eventId: string
+}
 
 /**
  * Componente de Mensajería en Tiempo Real
@@ -26,20 +74,20 @@ import './Messaging.css'
  * messagingService.clearAllMessagingData()
  */
 
-const Messaging = ({ userRole, userId, selectedEventId = null }) => {
-  const [conversations, setConversations] = useState([])
-  const [selectedConversation, setSelectedConversation] = useState(null)
-  const [messages, setMessages] = useState([])
-  const [newMessage, setNewMessage] = useState('')
-  const [loading, setLoading] = useState(true)
-  const [showNewConversation, setShowNewConversation] = useState(false)
-  const [showMobileMessages, setShowMobileMessages] = useState(false)
-  const [newConversationData, setNewConversationData] = useState({
+const Messaging = ({ userRole, userId, selectedEventId = null }: MessagingProps) => {
+  const [conversations, setConversations] = useState<Conversation[]>([])
+  const [selectedConversation, setSelectedConversation] = useState<Conversation | null>(null)
+  const [messages, setMessages] = useState<Message[]>([])
+  const [newMessage, setNewMessage] = useState<string>('')
+  const [loading, setLoading] = useState<boolean>(true)
+  const [showNewConversation, setShowNewConversation] = useState<boolean>(false)
+  const [showMobileMessages, setShowMobileMessages] = useState<boolean>(false)
+  const [newConversationData, setNewConversationData] = useState<NewConversationData>({
     recipientId: '',
     subject: '',
     eventId: selectedEventId || '',
   })
-  const [sendingMessage, setSendingMessage] = useState(false)
+  const [sendingMessage, setSendingMessage] = useState<boolean>(false)
 
   const toast = useToast()
   const asyncOp = useAsyncOperation()
@@ -78,9 +126,9 @@ const Messaging = ({ userRole, userId, selectedEventId = null }) => {
     }
   }
 
-  const handleSelectConversation = async (conversationId) => {
+  const handleSelectConversation = async (conversationId: string) => {
     const conv = conversations.find(c => c.id === conversationId)
-    setSelectedConversation(conv)
+    setSelectedConversation(conv || null)
     
     const msgs = await asyncOp(
       () => messagingService.getMessages(conversationId),
@@ -102,7 +150,7 @@ const Messaging = ({ userRole, userId, selectedEventId = null }) => {
     }
   }
 
-  const handleSendMessage = async (e) => {
+  const handleSendMessage = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     if (!newMessage.trim() || !selectedConversation) return
 
@@ -116,21 +164,21 @@ const Messaging = ({ userRole, userId, selectedEventId = null }) => {
     )
 
     if (message) {
-      setMessages([...messages, message])
+      setMessages([...messages, message as Message])
       setNewMessage('')
       toast.success('Mensaje enviado')
 
       // Actualizar última actividad de la conversación
       setConversations(conversations.map(c =>
         c.id === selectedConversation.id
-          ? { ...c, lastMessage: newMessage, lastMessageDate: new Date() }
+          ? { ...c, lastMessage: newMessage, lastMessageDate: new Date().toISOString() }
           : c
       ))
     }
     setSendingMessage(false)
   }
 
-  const handleCreateConversation = async (e) => {
+  const handleCreateConversation = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     
     if (!newConversationData.recipientId || !newConversationData.subject) {
@@ -144,7 +192,7 @@ const Messaging = ({ userRole, userId, selectedEventId = null }) => {
     )
     
     if (conversation) {
-      setConversations([conversation, ...conversations])
+      setConversations([conversation as Conversation, ...conversations])
       setShowNewConversation(false)
       setNewConversationData({
         recipientId: '',
@@ -152,7 +200,7 @@ const Messaging = ({ userRole, userId, selectedEventId = null }) => {
         eventId: '',
       })
       toast.success('Conversación creada correctamente')
-      handleSelectConversation(conversation.id)
+      handleSelectConversation((conversation as Conversation).id)
     }
   }
 
@@ -293,7 +341,7 @@ const Messaging = ({ userRole, userId, selectedEventId = null }) => {
                   role="listitem"
                   className={`conversation-item ${
                     selectedConversation?.id === conv.id ? 'active' : ''
-                  } ${conv.unreadCount > 0 ? 'unread' : ''}`}
+                  } ${conv.unreadCount && conv.unreadCount > 0 ? 'unread' : ''}`}
                   onClick={() => handleSelectConversation(conv.id)}
                   tabIndex={0}
                   onKeyPress={(e) => {
@@ -302,7 +350,7 @@ const Messaging = ({ userRole, userId, selectedEventId = null }) => {
                       handleSelectConversation(conv.id)
                     }
                   }}
-                  aria-label={`Conversación con ${conv.participantName}: ${conv.subject}${conv.unreadCount > 0 ? `, ${conv.unreadCount} mensajes sin leer` : ''}`}
+                  aria-label={`Conversación con ${conv.participantName}: ${conv.subject}${conv.unreadCount && conv.unreadCount > 0 ? `, ${conv.unreadCount} mensajes sin leer` : ''}`}
                 >
                   <div className="conversation-avatar" aria-hidden="true">
                     {conv.participantRole === 'teacher' ? '👨‍🏫' : '👨‍👩‍👧'}
@@ -324,7 +372,7 @@ const Messaging = ({ userRole, userId, selectedEventId = null }) => {
                       {conv.lastMessage}
                     </p>
                   </div>
-                  {conv.unreadCount > 0 && (
+                  {conv.unreadCount && conv.unreadCount > 0 && (
                     <div className="unread-badge" aria-label={`${conv.unreadCount} sin leer`}>
                       {conv.unreadCount}
                     </div>
@@ -427,12 +475,6 @@ const Messaging = ({ userRole, userId, selectedEventId = null }) => {
       </div>
     </div>
   )
-}
-
-Messaging.propTypes = {
-  userRole: PropTypes.oneOf([USER_ROLES.TEACHER, USER_ROLES.PARENT]).isRequired,
-  userId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
-  selectedEventId: PropTypes.string,
 }
 
 export default Messaging

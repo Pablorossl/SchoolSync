@@ -4,19 +4,36 @@
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api'
 
 /**
+ * Opciones para las peticiones HTTP
+ */
+export interface RequestOptions extends RequestInit {
+  headers?: Record<string, string>
+}
+
+/**
+ * Respuesta de error de la API
+ */
+export interface ApiError {
+  message: string
+  status?: number
+}
+
+/**
  * Cliente HTTP configurado con interceptores
  * Maneja automáticamente tokens de autenticación y errores
  */
 class ApiClient {
-  constructor(baseURL) {
+  private baseURL: string
+
+  constructor(baseURL: string) {
     this.baseURL = baseURL
   }
 
   /**
    * Obtener headers con token de autenticación
    */
-  getHeaders() {
-    const headers = {
+  private getHeaders(): Record<string, string> {
+    const headers: Record<string, string> = {
       'Content-Type': 'application/json',
     }
 
@@ -32,9 +49,9 @@ class ApiClient {
   /**
    * Manejar respuestas HTTP
    */
-  async handleResponse(response) {
+  private async handleResponse<T = any>(response: Response): Promise<T> {
     if (!response.ok) {
-      const error = await response.json().catch(() => ({
+      const error: ApiError = await response.json().catch(() => ({
         message: 'Error en la petición'
       }))
       
@@ -45,7 +62,9 @@ class ApiClient {
         window.location.href = '/login'
       }
       
-      throw new Error(error.message || `HTTP Error ${response.status}`)
+      const apiError = new Error(error.message || `HTTP Error ${response.status}`) as Error & { status: number }
+      apiError.status = response.status
+      throw apiError
     }
 
     return response.json()
@@ -55,48 +74,48 @@ class ApiClient {
    * GET request
    * 
    * Ejemplo de uso:
-   * const users = await apiClient.get('/users')
-   * const user = await apiClient.get('/users/123')
+   * const users = await apiClient.get<User[]>('/users')
+   * const user = await apiClient.get<User>('/users/123')
    */
-  async get(endpoint, options = {}) {
+  async get<T = any>(endpoint: string, options: RequestOptions = {}): Promise<T> {
     const response = await fetch(`${this.baseURL}${endpoint}`, {
       method: 'GET',
       headers: this.getHeaders(),
       ...options,
     })
-    return this.handleResponse(response)
+    return this.handleResponse<T>(response)
   }
 
   /**
    * POST request
    * 
    * Ejemplo de uso:
-   * const newUser = await apiClient.post('/users', { name: 'Juan', email: 'juan@example.com' })
+   * const newUser = await apiClient.post<User>('/users', { name: 'Juan', email: 'juan@example.com' })
    */
-  async post(endpoint, data, options = {}) {
+  async post<T = any>(endpoint: string, data?: any, options: RequestOptions = {}): Promise<T> {
     const response = await fetch(`${this.baseURL}${endpoint}`, {
       method: 'POST',
       headers: this.getHeaders(),
       body: JSON.stringify(data),
       ...options,
     })
-    return this.handleResponse(response)
+    return this.handleResponse<T>(response)
   }
 
   /**
    * PUT request
    * 
    * Ejemplo de uso:
-   * const updated = await apiClient.put('/users/123', { name: 'Juan Actualizado' })
+   * const updated = await apiClient.put<User>('/users/123', { name: 'Juan Actualizado' })
    */
-  async put(endpoint, data, options = {}) {
+  async put<T = any>(endpoint: string, data?: any, options: RequestOptions = {}): Promise<T> {
     const response = await fetch(`${this.baseURL}${endpoint}`, {
       method: 'PUT',
       headers: this.getHeaders(),
       body: JSON.stringify(data),
       ...options,
     })
-    return this.handleResponse(response)
+    return this.handleResponse<T>(response)
   }
 
   /**
@@ -105,13 +124,13 @@ class ApiClient {
    * Ejemplo de uso:
    * await apiClient.delete('/users/123')
    */
-  async delete(endpoint, options = {}) {
+  async delete<T = any>(endpoint: string, options: RequestOptions = {}): Promise<T> {
     const response = await fetch(`${this.baseURL}${endpoint}`, {
       method: 'DELETE',
       headers: this.getHeaders(),
       ...options,
     })
-    return this.handleResponse(response)
+    return this.handleResponse<T>(response)
   }
 }
 
@@ -123,14 +142,14 @@ export default apiClient
 /**
  * GUÍA DE USO CON BACKEND:
  * 
- * 1. En authService.js:
+ * 1. En authService.ts:
  *    import apiClient from './apiClient'
- *    const response = await apiClient.post('/auth/login', { email, password })
+ *    const response = await apiClient.post<AuthResponse>('/auth/login', { email, password })
  * 
- * 2. En calendarService.js:
+ * 2. En calendarService.ts:
  *    import apiClient from './apiClient'
- *    const events = await apiClient.get('/events')
- *    const newEvent = await apiClient.post('/events', eventData)
+ *    const events = await apiClient.get<Event[]>('/events')
+ *    const newEvent = await apiClient.post<Event>('/events', eventData)
  * 
  * 3. Configurar variables de entorno (.env):
  *    VITE_API_URL=http://localhost:5000/api

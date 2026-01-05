@@ -1,18 +1,30 @@
-import PropTypes from 'prop-types'
 import './LoadingSpinner.css'
 
 /**
+ * Tamaños disponibles para el spinner
+ */
+type SpinnerSize = 'small' | 'medium' | 'large'
+
+/**
+ * Props del componente LoadingSpinner
+ */
+interface LoadingSpinnerProps {
+  /** Tamaño del spinner */
+  size?: SpinnerSize
+  /** Mensaje opcional que se muestra debajo del spinner */
+  message?: string
+  /** Si se debe mostrar en pantalla completa */
+  fullScreen?: boolean
+}
+
+/**
  * Componente de spinner de carga
- * 
- * @param {string} size - Tamaño del spinner: "small", "medium", "large"
- * @param {string} message - Mensaje opcional que se muestra debajo del spinner
- * @param {boolean} fullScreen - Si se debe mostrar en pantalla completa
  */
 const LoadingSpinner = ({ 
   size = 'medium', 
   message = '', 
   fullScreen = false 
-}) => {
+}: LoadingSpinnerProps) => {
   const containerClass = fullScreen 
     ? 'loading-spinner-fullscreen' 
     : 'loading-spinner-container'
@@ -36,11 +48,6 @@ const LoadingSpinner = ({
   )
 }
 
-LoadingSpinner.propTypes = {
-  size: PropTypes.oneOf(['small', 'medium', 'large']),
-  message: PropTypes.string,
-  fullScreen: PropTypes.bool,
-}
 
 export default LoadingSpinner
 

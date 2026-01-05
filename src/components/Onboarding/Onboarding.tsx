@@ -1,9 +1,28 @@
 import { useState, useEffect } from 'react'
 import './Onboarding.css'
 
-const Onboarding = ({ userRole }) => {
-  const [currentStep, setCurrentStep] = useState(0)
-  const [isVisible, setIsVisible] = useState(false)
+/**
+ * Estructura de un paso del tutorial
+ */
+interface OnboardingStep {
+  title: string
+  description: string
+  target: string | null
+}
+
+/**
+ * Props del componente Onboarding
+ */
+interface OnboardingProps {
+  userRole: string
+}
+
+/**
+ * Componente de tutorial interactivo para nuevos usuarios
+ */
+const Onboarding = ({ userRole }: OnboardingProps) => {
+  const [currentStep, setCurrentStep] = useState<number>(0)
+  const [isVisible, setIsVisible] = useState<boolean>(false)
 
   useEffect(() => {
     // Verificar si el usuario ya vio el tutorial
@@ -14,7 +33,7 @@ const Onboarding = ({ userRole }) => {
     }
   }, [])
 
-  const steps = userRole === 'teacher' ? [
+  const steps: OnboardingStep[] = userRole === 'teacher' ? [
     {
       title: '¡Bienvenido, Profesor! 👨‍🏫',
       description: 'Te guiaremos por las funcionalidades principales de SchoolSync.',

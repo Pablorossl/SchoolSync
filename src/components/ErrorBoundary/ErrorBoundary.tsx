@@ -1,6 +1,22 @@
-import { Component } from 'react'
+import { Component, type ReactNode, type ErrorInfo } from 'react'
 import logger from '../../utils/logger'
 import './ErrorBoundary.css'
+
+/**
+ * Props del ErrorBoundary
+ */
+interface ErrorBoundaryProps {
+  children: ReactNode
+}
+
+/**
+ * State del ErrorBoundary
+ */
+interface ErrorBoundaryState {
+  hasError: boolean
+  error: Error | null
+  errorInfo: ErrorInfo | null
+}
 
 /**
  * Error Boundary Component
@@ -13,8 +29,8 @@ import './ErrorBoundary.css'
  *   <MiComponente />
  * </ErrorBoundary>
  */
-class ErrorBoundary extends Component {
-  constructor(props) {
+class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
+  constructor(props: ErrorBoundaryProps) {
     super(props)
     this.state = {
       hasError: false,
@@ -23,11 +39,11 @@ class ErrorBoundary extends Component {
     }
   }
 
-  static getDerivedStateFromError(error) {
+  static getDerivedStateFromError(_error: Error): Partial<ErrorBoundaryState> {
     return { hasError: true }
   }
 
-  componentDidCatch(error, errorInfo) {
+  componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     // Log del error
     logger.error('Error capturado por ErrorBoundary', {
       error,

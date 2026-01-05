@@ -56,6 +56,13 @@
   box-sizing: border-box;
 }
 
+html,
+body {
+  height: 100%;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
 body {
   font-family: var(--font-family);
   -webkit-font-smoothing: antialiased;
@@ -63,6 +70,10 @@ body {
   color: var(--text-primary);
   background: var(--bg-secondary);
   transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+#root {
+  min-height: 100%;
 }
 
 code {

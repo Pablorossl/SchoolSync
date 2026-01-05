@@ -8,11 +8,19 @@
 
 const isDevelopment = import.meta.env.DEV
 
-export const logger = {
+export interface Logger {
+  info: (message: string, ...args: any[]) => void
+  error: (message: string, error?: any) => void
+  warn: (message: string, ...args: any[]) => void
+  debug: (message: string, ...args: any[]) => void
+  success: (message: string, ...args: any[]) => void
+}
+
+export const logger: Logger = {
   /**
    * Log de información general
    */
-  info: (message, ...args) => {
+  info: (message: string, ...args: any[]): void => {
     if (isDevelopment) {
       console.info(`ℹ️ [INFO] ${message}`, ...args)
     }
@@ -21,7 +29,7 @@ export const logger = {
   /**
    * Log de errores
    */
-  error: (message, error) => {
+  error: (message: string, error?: any): void => {
     if (isDevelopment) {
       console.error(`❌ [ERROR] ${message}`, error)
     } else {
@@ -33,7 +41,7 @@ export const logger = {
   /**
    * Log de advertencias
    */
-  warn: (message, ...args) => {
+  warn: (message: string, ...args: any[]): void => {
     if (isDevelopment) {
       console.warn(`⚠️ [WARN] ${message}`, ...args)
     }
@@ -42,7 +50,7 @@ export const logger = {
   /**
    * Log de debug (solo en desarrollo)
    */
-  debug: (message, ...args) => {
+  debug: (message: string, ...args: any[]): void => {
     if (isDevelopment) {
       console.debug(`🐛 [DEBUG] ${message}`, ...args)
     }
@@ -51,7 +59,7 @@ export const logger = {
   /**
    * Log de éxito
    */
-  success: (message, ...args) => {
+  success: (message: string, ...args: any[]): void => {
     if (isDevelopment) {
       console.log(`✅ [SUCCESS] ${message}`, ...args)
     }

@@ -1,6 +1,52 @@
-import apiClient from './apiClient'
 import { STORAGE_KEYS } from '../constants/ui'
-import { MOCK_USERS, getUserById, MOCK_EVENT_TITLES } from '../constants/mockData'
+import { getUserById, MOCK_EVENT_TITLES, type MockUser } from '../constants/mockData'
+
+/**
+ * Tipos e interfaces para el servicio de mensajería
+ */
+export interface Message {
+  id: string
+  conversationId: string
+  senderId: string
+  senderName: string
+  senderRole: string
+  content: string
+  timestamp: string
+}
+
+export interface Conversation {
+  id: string
+  participants: string[]
+  subject: string
+  eventId: string | null
+  eventTitle: string | null
+  lastMessage: string
+  lastMessageDate: string
+  unreadBy: Record<string, number>
+  createdAt: string
+}
+
+export interface ConversationWithDetails extends Conversation {
+  participantId?: string
+  participantName: string
+  participantRole: string
+  unreadCount?: number
+}
+
+export interface SendMessageData {
+  conversationId: string
+  content: string
+}
+
+export interface CreateConversationData {
+  recipientId: string
+  subject: string
+  eventId?: string
+}
+
+interface StoredMessages {
+  [conversationId: string]: Message[]
+}
 
 /**
  * NOTA: Este servicio utiliza localStorage para persistir mensajes en desarrollo.
@@ -9,7 +55,7 @@ import { MOCK_USERS, getUserById, MOCK_EVENT_TITLES } from '../constants/mockDat
  */
 
 // Obtener usuario actual del localStorage
-const getCurrentUser = () => {
+const getCurrentUser = (): MockUser | null => {
   try {
     const userStr = localStorage.getItem('schoolsync_user')
     return userStr ? JSON.parse(userStr) : null
@@ -19,7 +65,7 @@ const getCurrentUser = () => {
 }
 
 // Obtener conversaciones del localStorage
-const getStoredConversations = () => {
+const getStoredConversations = (): Conversation[] => {
   try {
     const data = localStorage.getItem(STORAGE_KEYS.CONVERSATIONS)
     return data ? JSON.parse(data) : []
@@ -29,12 +75,12 @@ const getStoredConversations = () => {
 }
 
 // Guardar conversaciones en localStorage
-const saveConversations = (conversations) => {
+const saveConversations = (conversations: Conversation[]): void => {
   localStorage.setItem(STORAGE_KEYS.CONVERSATIONS, JSON.stringify(conversations))
 }
 
 // Obtener mensajes del localStorage
-const getStoredMessages = () => {
+const getStoredMessages = (): StoredMessages => {
   try {
     const data = localStorage.getItem(STORAGE_KEYS.MESSAGES)
     return data ? JSON.parse(data) : {}
@@ -44,19 +90,19 @@ const getStoredMessages = () => {
 }
 
 // Guardar mensajes en localStorage
-const saveMessages = (messages) => {
+const saveMessages = (messages: StoredMessages): void => {
   localStorage.setItem(STORAGE_KEYS.MESSAGES, JSON.stringify(messages))
 }
 
 // Simular delay de red
-const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms))
+const delay = (ms: number): Promise<void> => new Promise(resolve => setTimeout(resolve, ms))
 
 // Inicializar datos de ejemplo (solo la primera vez)
-const initializeSampleData = () => {
+const initializeSampleData = (): void => {
   const conversations = getStoredConversations()
   if (conversations.length === 0) {
     // Crear conversación de ejemplo entre profesor (id='1') y padre (id='2')
-    const sampleConversation = {
+    const sampleConversation: Conversation = {
       id: 'conv_sample_1',
       participants: ['1', '2'],
       subject: 'Consulta sobre tareas',
@@ -70,7 +116,7 @@ const initializeSampleData = () => {
     
     saveConversations([sampleConversation])
     
-    const sampleMessages = {
+    const sampleMessages: StoredMessages = {
       conv_sample_1: [
         {
           id: 'msg_sample_1',
@@ -102,9 +148,8 @@ initializeSampleData()
 
 /**
  * Obtener todas las conversaciones del usuario actual
- * @returns {Promise<Array>} Lista de conversaciones
  */
-export const getConversations = async () => {
+export const getConversations = async (): Promise<ConversationWithDetails[]> => {
   // TODO: BACKEND - Reemplazar con llamada real a la API
   // return await apiClient.get('/messaging/conversations')
   
@@ -126,27 +171,25 @@ export const getConversations = async () => {
       const otherParticipantId = conv.participants.find(
         p => String(p) !== currentUserId
       )
-      const otherUser = getUserById(otherParticipantId)
+      const otherUser = otherParticipantId ? getUserById(otherParticipantId) : null
       
       return {
         ...conv,
         participantId: otherParticipantId,
         participantName: otherUser?.name || 'Usuario desconocido',
         participantRole: otherUser?.role || 'unknown',
-        lastMessageDate: new Date(conv.lastMessageDate),
+        lastMessageDate: conv.lastMessageDate,
       }
     })
-    .sort((a, b) => new Date(b.lastMessageDate) - new Date(a.lastMessageDate))
+    .sort((a, b) => new Date(b.lastMessageDate).getTime() - new Date(a.lastMessageDate).getTime())
   
   return userConversations
 }
 
 /**
  * Obtener mensajes de una conversación específica
- * @param {string} conversationId - ID de la conversación
- * @returns {Promise<Array>} Lista de mensajes
  */
-export const getMessages = async (conversationId) => {
+export const getMessages = async (conversationId: string): Promise<Message[]> => {
   // TODO: BACKEND - Reemplazar con llamada real a la API
   // return await apiClient.get(`/messaging/conversations/${conversationId}/messages`)
   
@@ -155,20 +198,13 @@ export const getMessages = async (conversationId) => {
   const allMessages = getStoredMessages()
   const messages = allMessages[conversationId] || []
   
-  return messages.map(msg => ({
-    ...msg,
-    timestamp: new Date(msg.timestamp)
-  }))
+  return messages
 }
 
 /**
  * Enviar un nuevo mensaje en una conversación
- * @param {Object} messageData - Datos del mensaje
- * @param {string} messageData.conversationId - ID de la conversación
- * @param {string} messageData.content - Contenido del mensaje
- * @returns {Promise<Object>} Mensaje creado
  */
-export const sendMessage = async ({ conversationId, content }) => {
+export const sendMessage = async ({ conversationId, content }: SendMessageData): Promise<Message> => {
   // TODO: BACKEND - Reemplazar con llamada real a la API
   // return await apiClient.post(`/messaging/conversations/${conversationId}/messages`, {
   //   content
@@ -220,21 +256,13 @@ export const sendMessage = async ({ conversationId, content }) => {
     saveConversations(allConversations)
   }
   
-  return {
-    ...newMessage,
-    timestamp: new Date(newMessage.timestamp)
-  }
+  return newMessage
 }
 
 /**
  * Crear una nueva conversación
- * @param {Object} conversationData - Datos de la conversación
- * @param {string} conversationData.recipientId - ID del destinatario
- * @param {string} conversationData.subject - Asunto de la conversación
- * @param {string} [conversationData.eventId] - ID del evento relacionado (opcional)
- * @returns {Promise<Object>} Conversación creada
  */
-export const createConversation = async ({ recipientId, subject, eventId }) => {
+export const createConversation = async ({ recipientId, subject, eventId }: CreateConversationData): Promise<ConversationWithDetails> => {
   // TODO: BACKEND - Reemplazar con llamada real a la API
   // return await apiClient.post('/messaging/conversations', {
   //   recipientId,
@@ -281,16 +309,13 @@ export const createConversation = async ({ recipientId, subject, eventId }) => {
     participantName: recipient.name,
     participantRole: recipient.role,
     unreadCount: 0,
-    lastMessageDate: new Date(newConversation.lastMessageDate),
   }
 }
 
 /**
  * Marcar mensajes de una conversación como leídos
- * @param {string} conversationId - ID de la conversación
- * @returns {Promise<void>}
  */
-export const markAsRead = async (conversationId) => {
+export const markAsRead = async (conversationId: string): Promise<void> => {
   // TODO: BACKEND - Reemplazar con llamada real a la API
   // return await apiClient.put(`/messaging/conversations/${conversationId}/read`)
   
@@ -314,10 +339,8 @@ export const markAsRead = async (conversationId) => {
 
 /**
  * Obtener conversaciones relacionadas con un evento específico
- * @param {string} eventId - ID del evento
- * @returns {Promise<Array>} Lista de conversaciones relacionadas
  */
-export const getConversationsByEvent = async (eventId) => {
+export const getConversationsByEvent = async (eventId: string): Promise<ConversationWithDetails[]> => {
   // TODO: BACKEND - Reemplazar con llamada real a la API
   // return await apiClient.get(`/messaging/conversations?eventId=${eventId}`)
   
@@ -338,24 +361,21 @@ export const getConversationsByEvent = async (eventId) => {
       const otherParticipantId = conv.participants.find(
         p => String(p) !== currentUserId
       )
-      const otherUser = getUserById(otherParticipantId)
+      const otherUser = otherParticipantId ? getUserById(otherParticipantId) : null
       
       return {
         ...conv,
         participantId: otherParticipantId,
         participantName: otherUser?.name || 'Usuario desconocido',
         participantRole: otherUser?.role || 'unknown',
-        lastMessageDate: new Date(conv.lastMessageDate),
       }
     })
 }
 
 /**
  * Eliminar una conversación
- * @param {string} conversationId - ID de la conversación
- * @returns {Promise<void>}
  */
-export const deleteConversation = async (conversationId) => {
+export const deleteConversation = async (conversationId: string): Promise<void> => {
   // TODO: BACKEND - Reemplazar con llamada real a la API
   // return await apiClient.delete(`/messaging/conversations/${conversationId}`)
   
@@ -374,12 +394,15 @@ export const deleteConversation = async (conversationId) => {
   saveMessages(allMessages)
 }
 
+interface SearchResults {
+  conversations: ConversationWithDetails[]
+  messages: Message[]
+}
+
 /**
  * Buscar conversaciones y mensajes
- * @param {string} query - Término de búsqueda
- * @returns {Promise<Object>} Resultados de búsqueda
  */
-export const searchMessages = async (query) => {
+export const searchMessages = async (query: string): Promise<SearchResults> => {
   // TODO: BACKEND - Reemplazar con llamada real a la API
   // return await apiClient.get(`/messaging/search?q=${encodeURIComponent(query)}`)
   
@@ -408,26 +431,23 @@ export const searchMessages = async (query) => {
       const otherParticipantId = conv.participants.find(
         p => String(p) !== currentUserId
       )
-      const otherUser = getUserById(otherParticipantId)
+      const otherUser = otherParticipantId ? getUserById(otherParticipantId) : null
       
       return {
         ...conv,
         participantName: otherUser?.name || 'Usuario desconocido',
-        lastMessageDate: new Date(conv.lastMessageDate),
+        participantRole: otherUser?.role || 'unknown',
       }
     })
   
   // Buscar en mensajes
-  const messageResults = []
+  const messageResults: Message[] = []
   Object.entries(allMessages).forEach(([convId, messages]) => {
     const conv = userConversations.find(c => c.id === convId)
     if (conv) {
       messages.forEach(msg => {
         if (msg.content.toLowerCase().includes(lowerQuery)) {
-          messageResults.push({
-            ...msg,
-            timestamp: new Date(msg.timestamp)
-          })
+          messageResults.push(msg)
         }
       })
     }
@@ -441,9 +461,8 @@ export const searchMessages = async (query) => {
 
 /**
  * Limpiar todos los datos de mensajería (útil para desarrollo)
- * @returns {void}
  */
-export const clearAllMessagingData = () => {
+export const clearAllMessagingData = (): void => {
   localStorage.removeItem(STORAGE_KEYS.CONVERSATIONS)
   localStorage.removeItem(STORAGE_KEYS.MESSAGES)
   initializeSampleData()

@@ -6,12 +6,15 @@ import { useToast } from '../../context/ToastContext'
 import Tooltip from '../Tooltip/Tooltip'
 import ConfirmDialog from '../ConfirmDialog/ConfirmDialog'
 
+/**
+ * Componente Header - Barra de navegación superior
+ */
 const Header = () => {
   const { user, logout } = useAuth()
   const { theme, toggleTheme } = useTheme()
   const toast = useToast()
   const navigate = useNavigate()
-  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false)
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState<boolean>(false)
 
   const handleLogout = () => {
     logout()

@@ -42,7 +42,8 @@ describe('messagingService', () => {
       expect(result.senderName).toBe('James Kennedy')
       expect(result.senderRole).toBe('teacher')
       expect(result.content).toBe(messageContent)
-      expect(result.timestamp).toBeInstanceOf(Date)
+      expect(result.timestamp).toBeTruthy()
+      expect(typeof result.timestamp).toBe('string')
 
       // Verificar que el mensaje está en localStorage
       const storedMessages = JSON.parse(localStorage.getItem('schoolsync_messages'))

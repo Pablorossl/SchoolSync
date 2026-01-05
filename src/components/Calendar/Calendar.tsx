@@ -1,24 +1,35 @@
 import { useState, useEffect } from 'react'
-import PropTypes from 'prop-types'
 import FullCalendar from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import interactionPlugin from '@fullcalendar/interaction'
 import esLocale from '@fullcalendar/core/locales/es'
+import type { DateClickArg } from '@fullcalendar/interaction'
+import type { EventClickArg } from '@fullcalendar/core'
 import * as calendarService from '../../services/calendarService'
-import EventModal from '../EventModal/EventModal'
+import type { CalendarEvent } from '../../services/calendarService'
+import EventModal, { type EventData } from '../EventModal/EventModal'
 import LoadingSpinner from '../LoadingSpinner/LoadingSpinner'
 import { useToast } from '../../context/ToastContext'
-import logger from '../../utils/logger'
 import { EVENT_COLORS, USER_ROLES } from '../../constants/ui'
 import { useAsyncOperation } from '../../utils/helpers'
 import './Calendar.css'
 
-const Calendar = ({ userRole }) => {
-  const [events, setEvents] = useState([])
-  const [showModal, setShowModal] = useState(false)
-  const [selectedDate, setSelectedDate] = useState(null)
-  const [selectedEvent, setSelectedEvent] = useState(null)
-  const [loading, setLoading] = useState(true)
+/**
+ * Props del componente Calendar
+ */
+interface CalendarProps {
+  userRole: string
+}
+
+/**
+ * Componente de calendario interactivo
+ */
+const Calendar = ({ userRole }: CalendarProps) => {
+  const [events, setEvents] = useState<CalendarEvent[]>([])
+  const [showModal, setShowModal] = useState<boolean>(false)
+  const [selectedDate, setSelectedDate] = useState<string | null>(null)
+  const [selectedEvent, setSelectedEvent] = useState<CalendarEvent | null>(null)
+  const [loading, setLoading] = useState<boolean>(true)
 
   const toast = useToast()
   const isTeacher = userRole === USER_ROLES.TEACHER
@@ -41,7 +52,7 @@ const Calendar = ({ userRole }) => {
   }
 
   // Manejar clic en una fecha (solo profesores)
-  const handleDateClick = (info) => {
+  const handleDateClick = (info: DateClickArg) => {
     if (!isTeacher) return
 
     setSelectedDate(info.dateStr)
@@ -50,16 +61,16 @@ const Calendar = ({ userRole }) => {
   }
 
   // Manejar clic en un evento
-  const handleEventClick = (info) => {
+  const handleEventClick = (info: EventClickArg) => {
     const event = events.find(e => e.id === info.event.id)
-    setSelectedEvent(event)
+    setSelectedEvent(event || null)
     setShowModal(true)
   }
 
   // Crear nuevo evento
-  const handleCreateEvent = async (eventData) => {
+  const handleCreateEvent = async (eventData: EventData) => {
     const newEvent = await asyncOp(
-      () => calendarService.createEvent({ ...eventData, start: selectedDate }),
+      () => calendarService.createEvent({ ...eventData, start: selectedDate || eventData.start }),
       'No se pudo crear el evento'
     )
     if (newEvent) {
@@ -70,9 +81,11 @@ const Calendar = ({ userRole }) => {
   }
 
   // Actualizar evento
-  const handleUpdateEvent = async (eventData) => {
+  const handleUpdateEvent = async (eventData: EventData) => {
+    if (!selectedEvent?.id) return
+    
     const success = await asyncOp(
-      () => calendarService.updateEvent(selectedEvent.id, eventData),
+      () => calendarService.updateEvent(selectedEvent.id!, eventData),
       'No se pudo actualizar el evento'
     )
     if (success) {
@@ -86,8 +99,10 @@ const Calendar = ({ userRole }) => {
 
   // Eliminar evento
   const handleDeleteEvent = async () => {
+    if (!selectedEvent?.id) return
+    
     const success = await asyncOp(
-      () => calendarService.deleteEvent(selectedEvent.id),
+      () => calendarService.deleteEvent(selectedEvent.id!),
       'No se pudo eliminar el evento'
     )
     if (success) {
@@ -98,8 +113,8 @@ const Calendar = ({ userRole }) => {
   }
 
   // Colores según tipo de evento
-  const getEventColor = (eventType) => {
-    return EVENT_COLORS[eventType] || EVENT_COLORS.default
+  const getEventColor = (eventType: string): string => {
+    return EVENT_COLORS[eventType as keyof typeof EVENT_COLORS] || '#6b7280'
   }
 
   if (loading) {
@@ -176,10 +191,6 @@ const Calendar = ({ userRole }) => {
       )}
     </div>
   )
-}
-
-Calendar.propTypes = {
-  userRole: PropTypes.oneOf([USER_ROLES.TEACHER, USER_ROLES.PARENT]).isRequired,
 }
 
 export default Calendar

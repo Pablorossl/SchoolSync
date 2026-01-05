@@ -1,18 +1,35 @@
-import { useEffect } from 'react'
-import PropTypes from 'prop-types'
+import { useEffect, type MouseEvent, type KeyboardEvent } from 'react'
 import './ConfirmDialog.css'
 
 /**
+ * Tipos de diálogo disponibles
+ */
+type DialogType = 'danger' | 'warning' | 'info'
+
+/**
+ * Props del componente ConfirmDialog
+ */
+interface ConfirmDialogProps {
+  /** Si el diálogo está abierto */
+  isOpen: boolean
+  /** Callback para cerrar el diálogo */
+  onClose: () => void
+  /** Callback cuando se confirma la acción */
+  onConfirm: () => void
+  /** Título del diálogo */
+  title?: string
+  /** Mensaje de confirmación */
+  message?: string
+  /** Texto del botón de confirmar */
+  confirmText?: string
+  /** Texto del botón de cancelar */
+  cancelText?: string
+  /** Tipo de diálogo */
+  type?: DialogType
+}
+
+/**
  * Componente de diálogo de confirmación
- * 
- * @param {boolean} isOpen - Si el diálogo está abierto
- * @param {function} onClose - Callback para cerrar el diálogo
- * @param {function} onConfirm - Callback cuando se confirma la acción
- * @param {string} title - Título del diálogo
- * @param {string} message - Mensaje de confirmación
- * @param {string} confirmText - Texto del botón de confirmar (default: "Confirmar")
- * @param {string} cancelText - Texto del botón de cancelar (default: "Cancelar")
- * @param {string} type - Tipo de diálogo: "danger", "warning", "info" (default: "danger")
  */
 const ConfirmDialog = ({
   isOpen,
@@ -22,12 +39,12 @@ const ConfirmDialog = ({
   message = '¿Quieres continuar con esta acción?',
   confirmText = 'Confirmar',
   cancelText = 'Cancelar',
-  type = 'danger' // danger, warning, info
-}) => {
+  type = 'danger'
+}: ConfirmDialogProps) => {
   useEffect(() => {
     if (!isOpen) return
 
-    const handleEscape = (e) => {
+    const handleEscape = (e: globalThis.KeyboardEvent) => {
       if (e.key === 'Escape') {
         onClose()
       }
@@ -48,7 +65,7 @@ const ConfirmDialog = ({
     <div className="confirm-dialog-overlay" onClick={onClose}>
       <div 
         className="confirm-dialog-content" 
-        onClick={(e) => e.stopPropagation()}
+        onClick={(e: MouseEvent) => e.stopPropagation()}
         role="alertdialog"
         aria-labelledby="confirm-dialog-title"
         aria-describedby="confirm-dialog-message"
@@ -88,17 +105,6 @@ const ConfirmDialog = ({
       </div>
     </div>
   )
-}
-
-ConfirmDialog.propTypes = {
-  isOpen: PropTypes.bool.isRequired,
-  onClose: PropTypes.func.isRequired,
-  onConfirm: PropTypes.func.isRequired,
-  title: PropTypes.string,
-  message: PropTypes.string,
-  confirmText: PropTypes.string,
-  cancelText: PropTypes.string,
-  type: PropTypes.oneOf(['danger', 'warning', 'info']),
 }
 
 export default ConfirmDialog

@@ -10,7 +10,7 @@ const Dashboard = () => {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       <Header />
-      <Onboarding userRole={user?.role} />
+      <Onboarding userRole={user?.role || 'parent'} />
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Welcome Section */}
@@ -144,12 +144,12 @@ const Dashboard = () => {
 
         {/* Calendar Section */}
         <div className="mb-8 animate-slide-in-up" style={{animationDelay: '0.2s', animationFillMode: 'both'}}>
-          <Calendar userRole={user?.role} />
+          <Calendar userRole={user?.role || 'parent'} />
         </div>
 
         {/* Messaging Section */}
         <div className="animate-slide-in-up" style={{animationDelay: '0.3s', animationFillMode: 'both'}}>
-          <Messaging userRole={user?.role} userId={user?.id} />
+          <Messaging userRole={user?.role || 'parent'} userId={user?.id || ''} />
         </div>
       </div>
     </div>
