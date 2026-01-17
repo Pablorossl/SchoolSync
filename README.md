@@ -1,5 +1,12 @@
 # SchoolSync - Sistema de Gestión y Comunicación Escolar
 
+![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)
+![License](https://img.shields.io/badge/license-MIT-green.svg)
+![React](https://img.shields.io/badge/React-18.2.0-61DAFB?logo=react)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.9.3-3178C6?logo=typescript)
+![Vite](https://img.shields.io/badge/Vite-5.0.8-646CFF?logo=vite)
+![Tests](https://img.shields.io/badge/tests-21%20passing-success)
+
 ## Sobre el Proyecto
 
 **SchoolSync** es una plataforma web moderna de gestión y coordinación diseñada para resolver problemas reales de comunicación en entornos educativos. El proyecto surge de la identificación de ineficiencias en la coordinación entre múltiples stakeholders en instituciones con necesidades organizativas complejas.
@@ -70,7 +77,7 @@ Este proyecto está en **fase de desarrollo intensivo**. Actualmente cuenta con:
 - **Tutorial de onboarding** personalizado por rol
 - **Diálogos de confirmación** para acciones críticas
 
-### 🎨 Mejoras de UX/UI Recientes
+### Mejoras de UX/UI Recientes
 
 #### Sistema de Temas
 - Modo claro y oscuro completamente funcional
@@ -99,7 +106,7 @@ Este proyecto está en **fase de desarrollo intensivo**. Actualmente cuenta con:
 - Hover effects mejorados
 - Animaciones de carga fluidas
 
-> 📄 Para más detalles técnicos, consulta `/docs/UX_UI_IMPROVEMENTS.md`
+> Para más detalles técnicos, consulta `/docs/UX_UI_IMPROVEMENTS.md`
 
 ### Arquitectura Técnica
 - **Estructura modular** con separación clara de componentes, servicios, contexto y estilos
@@ -313,4 +320,4 @@ Este proyecto está en desarrollo y es de uso educativo. Los derechos de uso par
 
 ---
 
-**Desarrollado con la visión de mejorar la comunicación y organización en escuelas internacionales** 🎓✨
+**Desarrollado con la visión de mejorar la comunicación y organización en escuelas internacionales** 
