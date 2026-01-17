@@ -3,6 +3,18 @@
   "private": true,
   "version": "1.0.0",
   "type": "module",
+  "description": "Sistema de gestión y comunicación escolar para mejorar la coordinación entre profesores y familias",
+  "author": "Pablo",
+  "license": "MIT",
+  "keywords": [
+    "education",
+    "school-management",
+    "calendar",
+    "messaging",
+    "react",
+    "typescript",
+    "vite"
+  ],
   "scripts": {
     "dev": "vite",
     "build": "vite build",
