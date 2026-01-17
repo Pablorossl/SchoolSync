@@ -1,10 +1,10 @@
 # SchoolSync - Sistema de Gestión y Comunicación Escolar
 
-## 📋 Sobre el Proyecto
+## Sobre el Proyecto
 
 **SchoolSync** es una plataforma web moderna de gestión y coordinación diseñada para resolver problemas reales de comunicación en entornos educativos. El proyecto surge de la identificación de ineficiencias en la coordinación entre múltiples stakeholders en instituciones con necesidades organizativas complejas.
 
-### 🎯 Visión del Proyecto
+### Visión del Proyecto
 
 Este sistema está diseñado para abordar desafíos comunes en la gestión de información y coordinación entre diferentes roles de usuarios, proporcionando una solución centralizada y eficiente.
 
@@ -14,16 +14,16 @@ Este sistema está diseñado para abordar desafíos comunes en la gestión de in
 - Interfaz responsive y accesible desde múltiples dispositivos
 - Organización eficiente de contenido por categorías
 
-### 💡 Enfoque de Solución
+### Enfoque de Solución
 
 - **Centralización de información:** Punto único de acceso a contenido relevante
 - **Gestión basada en roles:** Diferentes niveles de permisos y funcionalidades
 - **Experiencia de usuario optimizada:** Diseño moderno y flujo de trabajo intuitivo
 - **Escalabilidad:** Arquitectura preparada para crecimiento y nuevas funcionalidades
 
-## 🚧 Estado Actual del Proyecto
+## Estado Actual del Proyecto
 
-> **⚠️ NOTA IMPORTANTE:** Este proyecto está en **desarrollo activo continuo**. Tanto el frontend como el backend están siendo mejorados constantemente. Nuevas características, mejoras de UX/UI y optimizaciones se implementan regularmente. El código y las funcionalidades evolucionan semana a semana.
+> **NOTA IMPORTANTE:** Este proyecto está en **desarrollo activo continuo**. Tanto el frontend como el backend están siendo mejorados constantemente. Nuevas características, mejoras de UX/UI y optimizaciones se implementan regularmente. El código y las funcionalidades evolucionan semana a semana.
 
 Este proyecto está en **fase de desarrollo intensivo**. Actualmente cuenta con:
 
@@ -56,7 +56,7 @@ Este proyecto está en **fase de desarrollo intensivo**. Actualmente cuenta con:
 4. Despliegue en producción
 5. Monitoreo y analytics
 
-## 🚀 Características Implementadas
+## Características Implementadas
 
 ### Funcionalidades Actuales
 - **Sistema de Autenticación** con control de acceso basado en roles
@@ -73,31 +73,31 @@ Este proyecto está en **fase de desarrollo intensivo**. Actualmente cuenta con:
 ### 🎨 Mejoras de UX/UI Recientes
 
 #### Sistema de Temas
-- ✅ Modo claro y oscuro completamente funcional
-- ✅ Variables CSS para consistencia visual
-- ✅ Persistencia de preferencias en localStorage
-- ✅ Detección automática de tema del sistema
-- ✅ Transiciones suaves entre temas
+- Modo claro y oscuro completamente funcional
+- Variables CSS para consistencia visual
+- Persistencia de preferencias en localStorage
+- Detección automática de tema del sistema
+- Transiciones suaves entre temas
 
 #### Notificaciones y Feedback
-- ✅ Sistema de toast notifications (success/error/warning/info)
-- ✅ Tooltips contextuales en elementos clave
-- ✅ Spinners de carga animados
-- ✅ Estados de loading en operaciones asíncronas
-- ✅ Confirmaciones modales para acciones destructivas
+- Sistema de toast notifications (success/error/warning/info)
+- Tooltips contextuales en elementos clave
+- Spinners de carga animados
+- Estados de loading en operaciones asíncronas
+- Confirmaciones modales para acciones destructivas
 
 #### Accesibilidad
-- ✅ ARIA labels comprehensivos
-- ✅ Navegación completa por teclado
-- ✅ Roles semánticos (dialog, listitem, status)
-- ✅ Screen reader friendly
-- ✅ Focus visible en elementos interactivos
+- ARIA labels comprehensivos
+- Navegación completa por teclado
+- Roles semánticos (dialog, listitem, status)
+- Screen reader friendly
+- Focus visible en elementos interactivos
 
 #### Animaciones
-- ✅ Entrada escalonada de elementos del dashboard
-- ✅ Transiciones suaves en cambios de estado
-- ✅ Hover effects mejorados
-- ✅ Animaciones de carga fluidas
+- Entrada escalonada de elementos del dashboard
+- Transiciones suaves en cambios de estado
+- Hover effects mejorados
+- Animaciones de carga fluidas
 
 > 📄 Para más detalles técnicos, consulta `/docs/UX_UI_IMPROVEMENTS.md`
 
@@ -109,7 +109,7 @@ Este proyecto está en **fase de desarrollo intensivo**. Actualmente cuenta con:
 - **Servicios API estructurados** listos para conectar con backend
 - **Sistema de enrutamiento** protegido con rutas privadas por rol
 
-## 📦 Instalación
+## Instalación
 
 ```bash
 # Instalar dependencias
@@ -122,7 +122,7 @@ npm run dev
 npm run build
 ```
 
-## 🔑 Acceso de Desarrollo
+## Acceso de Desarrollo
 
 Durante el desarrollo no se comparten credenciales en el README público. Para probar la aplicación en entorno local, usa una de estas opciones:
 
@@ -132,7 +132,7 @@ Durante el desarrollo no se comparten credenciales en el README público. Para p
 
 > Nota: las credenciales de ejemplo y detalles operativos se mantienen en documentación privada para proteger la idea. Solicita acceso si colaboras en el proyecto.
 
-## 📁 Estructura del Proyecto
+## Estructura del Proyecto
 
 ```
 schoolSync/
@@ -150,15 +150,15 @@ schoolSync/
 └── vite.config.js
 ```
 
-## 🔄 Integración con Backend (En Preparación)
+## Integración con Backend (En Preparación)
 
 El proyecto está completamente preparado para la integración con backend:
 
-### 📋 Contrato API Completo
+### Contrato API Completo
 
 El frontend tiene **documentación exhaustiva** del contrato API esperado:
 
-📄 **[Consulta docs/API_CONTRACT.md](docs/API_CONTRACT.md)** para ver:
+ **[Consulta docs/API_CONTRACT.md](docs/API_CONTRACT.md)** para ver:
 - Todos los endpoints necesarios (Auth, Messaging, Calendar)
 - Request/Response examples con tipos de datos
 - Códigos de error y manejo
@@ -194,10 +194,10 @@ npm test  # Ver tests de referencia para estructura de datos
 ```
 
 **Integración incremental:**
-1. ✅ Auth endpoints (login, register, verify)
-2. ✅ Calendar CRUD (GET /events, POST /events, PUT /events/:id, DELETE /events/:id)
-3. ✅ Messaging básico (GET /conversations, POST /conversations, GET /messages)
-4. ⏳ Real-time con WebSockets (opcional)
+1. Auth endpoints (login, register, verify)
+2. Calendar CRUD (GET /events, POST /events, PUT /events/:id, DELETE /events/:id)
+3. Messaging básico (GET /conversations, POST /conversations, GET /messages)
+4. Real-time con WebSockets (opcional)
 
 **Archivos clave para revisar:**
 - `docs/API_CONTRACT.md` - Especificación completa de API
@@ -205,7 +205,7 @@ npm test  # Ver tests de referencia para estructura de datos
 - `src/services/authService.js` - Ejemplo de integración
 - `src/tests/*.test.js` - Tests de referencia para validar responses
 
-### 🎭 Modo Mock para Desarrollo Independiente
+### Modo Mock para Desarrollo Independiente
 
 Si necesitas desarrollar frontend sin esperar al backend, usa el **Mock Service Worker** incluido:
 
@@ -225,11 +225,11 @@ npm run dev
 - Padre: `padre@schoolsync.com` / `padre123`
 
 **Características del Mock:**
-- ✅ 20+ endpoints mockeados según API_CONTRACT.md
-- ✅ Persistencia en memoria durante la sesión
-- ✅ Latencia simulada (100-300ms)
-- ✅ Validación de tokens y permisos
-- ✅ Lógica de negocio (unread counters, last message, etc.)
+- 20+ endpoints mockeados según API_CONTRACT.md
+- Persistencia en memoria durante la sesión
+- Latencia simulada (100-300ms)
+- Validación de tokens y permisos
+- Lógica de negocio (unread counters, last message, etc.)
 
 **Documentación completa:** [`docs/MSW_GUIDE.md`](docs/MSW_GUIDE.md)
 
@@ -242,7 +242,7 @@ npm run dev
 6. Implementar almacenamiento y validación de tokens JWT
 7. Migrar datos de `localStorage` a base de datos
 
-## 🛠️ Stack Tecnológico
+## Stack Tecnológico
 
 ### Frontend Actual
 - **Vite** - Build tool moderno y rápido
@@ -258,7 +258,7 @@ npm run dev
 - **JWT** - Autenticación y autorización
 - **Nodemailer** - Sistema de notificaciones por email
 
-## 📝 Notas
+## Notas
 
 ### Desarrollo Actual
 - **Persistencia temporal:** Los datos se guardan en `localStorage` del navegador (temporal hasta implementar backend)
@@ -272,14 +272,14 @@ npm run dev
 - **Context API:** Gestión de estado sin dependencias adicionales (suficiente para el alcance actual)
 - **CSS Modules:** Estilos modulares por componente para mantenibilidad
 
-## 🎨 Personalización
+## Personalización
 
 - **Colores y tema:** Edita variables en `/src/styles/index.css`
 - **Roles adicionales:** Modifica la configuración en `/src/services/authService.js`
 - **Tipos de eventos:** Personaliza categorías en `/src/components/Calendar/Calendar.jsx`
 - **Textos e idioma:** Los strings están en los componentes (próximo paso: i18n)
 
-## 🤝 Contribución y Contacto
+## Contribución y Contacto
 
 Este es un proyecto personal en **desarrollo activo continuo**. Si estás interesado en colaborar, tienes sugerencias, feedback sobre UX/UI o quieres implementar algo similar en tu institución educativa, toda contribución es bienvenida.
 
@@ -307,7 +307,7 @@ Este es un proyecto personal en **desarrollo activo continuo**. Si estás intere
 - [ ] Monitoreo de producción
 - [ ] Documentación técnica
 
-## 📄 Licencia
+## Licencia
 
 Este proyecto está en desarrollo y es de uso educativo. Los derechos de uso para instituciones educativas reales se definirán una vez completada la implementación.
 
